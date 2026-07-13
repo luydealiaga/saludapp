@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salud Ka & Lolo</title>
+<style>
+  /* ===== TEMA 1: Cálido (default) ===== */
+  :root, body[data-theme=calido]{
+    --bg:#f7f5f0; --card:#ffffff; --ink:#2b2b2b; --muted:#7a7a72;
+    --accent:#c96f4a; --accent2:#5e8b6f; --soft:#efe9df; --line:#e5dfd3;
+    --ka:#c96f4a; --lolo:#5e8b6f; --warn:#b3452e; --ok:#3d7a52;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --font-head:var(--font); --radius:14px;
+  }
+  /* ===== TEMA: Neo Oscuro (geométrico neón) ===== */
+  body[data-theme=neo]{
+    --bg:#101226; --card:#181a33; --ink:#eef0ff; --muted:#8e93b8;
+    --accent:#ff3d71; --accent2:#22d3ee; --soft:#232649; --line:#2b2e55;
+    --ka:#ff8a3d; --lolo:#22d3ee; --warn:#ff5470; --ok:#2dd4bf;
+    --font:'Helvetica Neue',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-head:var(--font); --radius:12px;
+  }
+  body[data-theme=neo] header h1, body[data-theme=neo] .card h2, body[data-theme=neo] .card h3,
+  body[data-theme=neo] summary{text-transform:uppercase;letter-spacing:1.2px;font-weight:900}
+  body[data-theme=neo] header{overflow:hidden}
+  body[data-theme=neo] header::before{content:'';position:absolute;right:-25px;top:-45px;width:150px;height:150px;transform:rotate(45deg);background:linear-gradient(90deg,#ff3d71,#7c5cff);border-radius:20px;opacity:.9}
+  body[data-theme=neo] header::after{content:'';position:absolute;right:85px;top:-55px;width:95px;height:95px;transform:rotate(45deg);background:#22d3ee;border-radius:16px;opacity:.8}
+  body[data-theme=neo] .card, body[data-theme=neo] details{position:relative;overflow:hidden}
+  body[data-theme=neo] .card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#ff3d71,#ff8a3d,#22d3ee,#7c5cff)}
+  body[data-theme=neo] input, body[data-theme=neo] select, body[data-theme=neo] textarea{background:#1f2247;color:var(--ink);border-color:var(--line)}
+  body[data-theme=neo] .foodresult{background:#1f2247}
+  body[data-theme=neo] .btn{background:linear-gradient(90deg,#ff3d71,#7c5cff)}
+  body[data-theme=neo] .btn.green{background:linear-gradient(90deg,#22d3ee,#2dd4bf);color:#0b1029}
+  body[data-theme=neo] .btn.ghost{background:var(--soft);color:var(--ink)}
+  body[data-theme=neo] .pill.on{background:linear-gradient(90deg,#ff3d71,#7c5cff);border-color:transparent}
+  body[data-theme=neo] .pill.cat.on{background:linear-gradient(90deg,#22d3ee,#2dd4bf);border-color:transparent;color:#0b1029}
+  body[data-theme=neo] .kcalbar div{background:linear-gradient(90deg,#22d3ee,#2dd4bf)}
+  body[data-theme=neo] .kcalbar div.over{background:linear-gradient(90deg,#ff3d71,#ff8a3d)}
+  body[data-theme=neo] .notice{background:#251f3d;border-color:#4a3d6b;color:#d9cff2}
+  body[data-theme=neo] .t-ldl{background:#3d1f2c;color:#ff88a8}
+  body[data-theme=neo] .t-prot{background:#123a38;color:#5eead4}
+  body[data-theme=neo] .t-sh{background:#2b2350;color:#b8a3ff}
+  body[data-theme=neo] .t-sl{background:#132f42;color:#67d9f5}
+  body[data-theme=neo] .t-fib{background:#3d3018;color:#ffc069}
+  body[data-theme=neo] .who button.ka.on{background:#332114;box-shadow:0 0 0 1px #ff8a3d}
+  body[data-theme=neo] .who button.lolo.on{background:#122c3a;box-shadow:0 0 0 1px #22d3ee}
+  body[data-theme=neo] .plate{border-left-color:#22d3ee}
+  /* ===== TEMA: Neo Claro ===== */
+  body[data-theme=neoluz]{
+    --bg:#f5f6fc; --card:#ffffff; --ink:#181b3a; --muted:#6d7194;
+    --accent:#ff3d71; --accent2:#0e9db8; --soft:#eef0fa; --line:#e0e3f2;
+    --ka:#f0742a; --lolo:#0e9db8; --warn:#e0335e; --ok:#0d9e8a;
+    --font:'Helvetica Neue',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-head:var(--font); --radius:12px;
+  }
+  body[data-theme=neoluz] header h1, body[data-theme=neoluz] .card h2, body[data-theme=neoluz] .card h3,
+  body[data-theme=neoluz] summary{text-transform:uppercase;letter-spacing:1.2px;font-weight:900}
+  body[data-theme=neoluz] header{overflow:hidden}
+  body[data-theme=neoluz] header::before{content:'';position:absolute;right:-25px;top:-45px;width:150px;height:150px;transform:rotate(45deg);background:linear-gradient(90deg,#ff3d71,#7c5cff);border-radius:20px}
+  body[data-theme=neoluz] header::after{content:'';position:absolute;right:85px;top:-55px;width:95px;height:95px;transform:rotate(45deg);background:#22d3ee;border-radius:16px}
+  body[data-theme=neoluz] .card{position:relative;overflow:hidden}
+  body[data-theme=neoluz] .card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#ff3d71,#ff8a3d,#22d3ee,#7c5cff)}
+  body[data-theme=neoluz] .btn{background:linear-gradient(90deg,#ff3d71,#7c5cff)}
+  body[data-theme=neoluz] .btn.green{background:linear-gradient(90deg,#0e9db8,#0d9e8a)}
+  body[data-theme=neoluz] .pill.on{background:linear-gradient(90deg,#ff3d71,#7c5cff);border-color:transparent}
+  body[data-theme=neoluz] .pill.cat.on{background:linear-gradient(90deg,#0e9db8,#0d9e8a);border-color:transparent}
+  body[data-theme=neoluz] .kcalbar div{background:linear-gradient(90deg,#0e9db8,#0d9e8a)}
+  header>div,header>select{position:relative;z-index:2}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);padding-bottom:80px;transition:background .3s}
+  header{background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  header h1{font-size:18px;font-weight:700;font-family:var(--font-head)}
+  header p{font-size:11px;color:var(--muted);margin-top:2px}
+  #themepick{width:auto;font-size:12px;padding:6px 8px}
+  nav{display:flex;gap:2px;background:var(--card);border-bottom:1px solid var(--line);padding:0 6px;position:sticky;top:58px;z-index:10;overflow-x:auto}
+  nav button{flex:1;min-width:72px;padding:11px 4px;border:none;background:none;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+  nav button.active{color:var(--accent);border-bottom-color:var(--accent)}
+  main{max-width:760px;margin:0 auto;padding:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+  .card h2{font-size:16px;margin-bottom:10px;font-family:var(--font-head)}
+  .card h3{font-size:14px;margin:12px 0 6px;font-family:var(--font-head)}
+  .muted{color:var(--muted);font-size:12px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.grid2{grid-template-columns:1fr}}
+  label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+  input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:14px;background:#fdfcfa;color:var(--ink);font-family:var(--font)}
+  textarea{resize:vertical;min-height:56px}
+  .btn{display:inline-block;padding:10px 18px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
+  .btn.green{background:var(--accent2)}
+  .btn.small{padding:6px 12px;font-size:12px;margin-top:0}
+  .btn.ghost{background:var(--soft);color:var(--ink)}
+  .pillrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .pill{padding:6px 12px;border-radius:999px;background:var(--soft);border:1px solid var(--line);font-size:12px;cursor:pointer;user-select:none;color:var(--ink)}
+  .pill.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .pill.cat.on{background:var(--accent2);border-color:var(--accent2)}
+  body[data-theme=edit] .pill.cat.on{color:#fff}
+  .tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:600;margin:2px 3px 2px 0}
+  .t-ldl{background:#fdeae2;color:#a04a26}.t-prot{background:#e4efe8;color:#3d6b4f}
+  .t-sh{background:#efe6f5;color:#6d4a86}.t-sl{background:#e4eef5;color:#3d5f7a}
+  .t-fib{background:#f5efd9;color:#7a6a26}
+  .credit{font-size:11px;color:var(--muted);font-style:italic;font-weight:400}
+  .who{display:flex;gap:8px;margin-bottom:12px}
+  .who button{flex:1;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:14px;cursor:pointer;color:var(--ink)}
+  .who button.ka.on{border-color:var(--ka);color:var(--ka);background:#fdf1ec}
+  .who button.lolo.on{border-color:var(--lolo);color:var(--lolo);background:#eef5f0}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+  .res .box{background:var(--soft);border-radius:10px;padding:12px}
+  .res .box b{font-size:20px;display:block}
+  .res .box span{font-size:11px;color:var(--muted)}
+  .flag{font-size:12px;font-weight:600;margin-top:3px;display:block}
+  .flag.bad{color:var(--warn)}.flag.good{color:var(--ok)}
+  details{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;background:var(--card)}
+  summary{cursor:pointer;font-weight:600;font-size:14px;font-family:var(--font-head)}
+  details p,details li{font-size:13px;line-height:1.55}
+  details ul,details ol{padding-left:20px;margin:6px 0}
+  details ol li{margin-bottom:4px}
+  .why{background:var(--soft);border-radius:8px;padding:8px 10px;font-size:12px;margin-top:8px}
+  .plate{border-left:3px solid var(--accent);padding:6px 10px;font-size:12px;margin-top:8px;color:var(--ink);background:var(--soft);border-radius:0 8px 8px 0}
+  .del{background:none;border:none;color:var(--warn);cursor:pointer;font-size:12px}
+  .checkrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .checkrow input[type=checkbox]{width:20px;height:20px;flex:none}
+  .checkrow .sub{font-size:11px;color:var(--muted);display:block}
+  .notice{background:#fdf6e8;border:1px solid #ecd9a8;border-radius:10px;padding:10px 12px;font-size:12px;margin-bottom:12px}
+  .foodresult{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin-top:6px;font-size:13px;background:#fdfcfa}
+  .foodresult .qbtns{display:flex;gap:4px;flex:none}
+  .foodresult .qbtns button{border:1px solid var(--line);background:var(--soft);border-radius:7px;padding:5px 9px;font-size:12px;font-weight:700;cursor:pointer;color:var(--ink)}
+  .foodresult .qbtns button:hover{background:var(--accent);color:#fff}
+  .kcalbar{height:14px;background:var(--soft);border-radius:999px;overflow:hidden;margin-top:8px}
+  .kcalbar div{height:100%;background:var(--accent2);border-radius:999px;transition:width .3s}
+  .kcalbar div.over{background:var(--warn)}
+  .bigkcal{font-size:26px;font-weight:800}
+  .vasos{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .vaso{font-size:24px;cursor:pointer;filter:grayscale(1);opacity:.35;transition:all .15s}
+  .vaso.on{filter:none;opacity:1}
+  footer{max-width:760px;margin:20px auto;padding:0 16px;font-size:11px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body data-theme="calido">
+<header>
+  <div>
+    <h1>🌿 Salud Ka & Lolo</h1>
+    <p>Diario · Recetas · Cálculos · Entrenamiento · Suplementos — v3</p>
+  </div>
+  <select id="themepick" onchange="setTheme(this.value)">
+    <option value="neo">⚡ Neo Oscuro</option>
+    <option value="neoluz">✨ Neo Claro</option>
+  </select>
+</header>
+<nav>
+  <button class="active" data-tab="diario">📒 Diario</button>
+  <button data-tab="rec">🍽️ Recetas</button>
+  <button data-tab="calc">🧮 Calculadora</button>
+  <button data-tab="tren">🏋️ Entrenamiento</button>
+</nav>
+<main>
+
+<!-- ================= DIARIO ================= -->
+<section id="tab-diario">
+  <div class="who">
+    <button class="ka on" onclick="setDiarioWho('ka')">Ka 🔥</button>
+    <button class="lolo" onclick="setDiarioWho('lolo')">Lolo 🌱</button>
+  </div>
+  <div class="card">
+    <h2>📒 ¿Qué comimos hoy?</h2>
+    <div class="grid2">
+      <div><label>Fecha</label><input type="date" id="d-fecha" onchange="renderDiario()"></div>
+      <div><label>Buscar alimento (elegí porción: ½, 1 o 2)</label><input type="text" id="d-buscar" placeholder="ej: pizza, vino, lentejas..." oninput="buscarAlimento()"></div>
+    </div>
+    <div id="d-resultados"></div>
+    <details style="margin-top:10px"><summary style="font-size:13px">✍️ Plato propio — lo estimo por ingredientes</summary>
+      <p class="muted" style="margin-top:6px">Escribí el plato con sus ingredientes (ej: "fideos de arroz con un poquito de atún y brócoli") y toco Estimar: busco cada ingrediente y sumo. Palabras como "poquito", "poco" o "chico" cuentan como media porción; "mucho", "doble" o "grande" como una y media.</p>
+      <input type="text" id="d-custom-n" placeholder="Describí el plato con sus ingredientes" style="margin-top:8px">
+      <button class="btn small ghost" onclick="estimarPlato()" style="margin-top:8px">🔎 Estimar calorías</button>
+      <div id="d-estimado" style="margin-top:8px;font-size:13px"></div>
+    </details>
+  </div>
+  <div class="card">
+    <h2>Total del día — <span id="d-name">Ka</span></h2>
+    <span class="bigkcal" id="d-total">0</span> <span class="muted">kcal de <span id="d-meta">—</span> objetivo (estimación ±10-15% eligiendo bien las porciones)</span>
+    <div class="kcalbar"><div id="d-bar" style="width:0%"></div></div>
+    <p class="muted" id="d-resto" style="margin-top:6px"></p>
+    <p class="muted" id="d-semana" style="margin-top:4px"></p>
+    <table style="margin-top:10px"><tbody id="d-items"></tbody></table>
+  </div>
+  <div class="card">
+    <h2>💧 Agua de hoy — <span id="a-name">Ka</span></h2>
+    <p class="muted">Meta: <span id="a-meta">—</span>. Tocá un vaso por cada uno que tomes (250 ml). Días de entrenamiento: sumá 2 más.</p>
+    <div class="vasos" id="a-vasos"></div>
+    <p class="muted" id="a-estado" style="margin-top:6px"></p>
+  </div>
+  <div class="card">
+    <h2>💊 Suplementos de hoy</h2>
+    <div id="sup-diario"></div>
+    <details style="margin-top:10px"><summary style="font-size:13px">➕ Agregar suplemento (opcional)</summary>
+      <div class="grid2" style="margin-top:8px">
+        <div><input type="text" id="new-sup" placeholder="Nombre y dosis"></div>
+        <div><select id="new-sup-who"><option value="ka">Ka</option><option value="lolo">Lolo</option><option value="ambas">Ambas</option></select></div>
+      </div>
+      <button class="btn small ghost" onclick="addSup()" style="margin-top:8px">+ Agregar</button>
+    </details>
+    <details style="margin-top:10px"><summary style="font-size:13px">🔎 Recomendados para evaluar con médico 🩺</summary>
+      <div id="sup-rec" style="margin-top:8px"></div>
+    </details>
+  </div>
+  <div class="card" id="caca-card">
+    <h2>💩</h2>
+    <div class="pillrow" style="margin-top:8px">
+      <span class="pill" id="caca-si" onclick="setCaca(true)">✔ Sí, fui</span>
+      <span class="pill" id="caca-no" onclick="setCaca(false)">✖ No fui</span>
+    </div>
+    <div id="caca-hist" style="font-size:13px;margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <h2>💾 Datos y respaldo</h2>
+    <p class="muted">Todo (semanas, meses, historial completo) se guarda automáticamente en este navegador. Pero si se borran los datos del navegador, se pierde: exportá un respaldo cada semana. Ese mismo archivo sirve para pasar tus datos a otro dispositivo.</p>
+    <button class="btn small ghost" onclick="exportarDatos()">📤 Exportar respaldo</button>
+    <label class="btn small ghost" style="cursor:pointer;margin-left:6px">📥 Importar respaldo<input type="file" accept=".json" style="display:none" onchange="importarDatos(this)"></label>
+  </div>
+</section>
+
+<!-- ================= RECETAS ================= -->
+<section id="tab-rec" style="display:none">
+  <div class="notice">📖 <b>Recetario de 50 — todas las cantidades son para 2 porciones.</b> Las "estilo Paulina / Narda / Kulinaria / Fernandini" son adaptaciones inspiradas en su cocina, ajustadas a sus objetivos. Cada una tiene link para ver la original con foto. 🍓 <b>Frutas para variar:</b> kiwi, frutillas, pera, palta, arándanos, ciruelas, uvas, melón.</div>
+  <div class="pillrow" id="cats">
+    <span class="pill cat on" data-c="all">Todas</span>
+    <span class="pill cat" data-c="sopa">🍲 Sopas de invierno</span>
+    <span class="pill cat" data-c="plato">🍛 Platos</span>
+    <span class="pill cat" data-c="bowl">🥗 Bowls & ensaladas</span>
+    <span class="pill cat" data-c="des">🍳 Desayunos</span>
+    <span class="pill cat" data-c="post">🍫 Dulces</span>
+  </div>
+  <div class="pillrow" id="filters">
+    <span class="pill on" data-f="all">Sin filtro</span>
+    <span class="pill" data-f="ldl">↓ Colesterol</span>
+    <span class="pill" data-f="prot">Alta proteína</span>
+    <span class="pill" data-f="sinharina">Sin harinas</span>
+    <span class="pill" data-f="sinlacteos">Sin lácteos</span>
+    <span class="pill" data-f="fibra">Alta fibra</span>
+  </div>
+  <p class="muted" id="reccount"></p>
+  <div id="reclist"></div>
+</section>
+
+<!-- ================= CALCULADORA ================= -->
+<section id="tab-calc" style="display:none">
+  <div class="who">
+    <button class="ka on" onclick="setPerson('ka')">Ka 🔥</button>
+    <button class="lolo" onclick="setPerson('lolo')">Lolo 🌱</button>
+  </div>
+  <div class="card">
+    <h2>Datos de <span id="c-name">Ka</span></h2>
+    <div class="grid2">
+      <div><label>Peso (kg)</label><input type="number" id="c-peso" step="0.1"></div>
+      <div><label>Altura (cm)</label><input type="number" id="c-alt"></div>
+      <div><label>Edad</label><input type="number" id="c-edad"></div>
+      <div><label>Cintura (cm)</label><input type="number" id="c-cint"></div>
+      <div><label>Actividad</label>
+        <select id="c-act">
+          <option value="1.2">Sedentaria</option>
+          <option value="1.375" selected>Ligera (entreno 3x/sem)</option>
+          <option value="1.55">Moderada (4-5x/sem)</option>
+        </select>
+      </div>
+      <div><label>Objetivo</label>
+        <select id="c-obj">
+          <option value="recomp">Recomposición (músculo + perder grasa abd.)</option>
+          <option value="deficit">Bajar grasa sin perder músculo</option>
+          <option value="mant">Mantener</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn" onclick="calc()">Calcular</button>
+    <button class="btn ghost" onclick="saveProfile()">Guardar datos</button>
+    <div class="res" id="c-res"></div>
+    <p class="muted" style="margin-top:10px">Fórmulas: IMC = kg/m² · TMB Mifflin-St Jeor (mujeres) · Cintura/altura &lt; 0.5 es la meta para grasa abdominal (mejor indicador que el IMC en meno/peri).</p>
+  </div>
+</section>
+
+<!-- ================= ENTRENAMIENTO ================= -->
+<section id="tab-tren" style="display:none">
+  <div class="card">
+    <h2>📓 Registrar sesión con la entrenadora</h2>
+    <div class="grid2">
+      <div><label>Fecha</label><input type="date" id="s-fecha"></div>
+      <div><label>Quién</label><select id="s-quien"><option value="ka">Ka</option><option value="lolo">Lolo</option><option value="ambas">Ambas</option></select></div>
+      <div><label>Foco</label><select id="s-foco"><option>Fuerza</option><option>Equilibrio</option><option>Estiramiento</option><option>Mixto</option></select></div>
+      <div><label>Esfuerzo percibido (1-10)</label><input type="number" id="s-rpe" min="1" max="10"></div>
+    </div>
+    <label style="margin-top:8px">Ejercicios y pesos (ej: sentadilla 3x10 con 8kg)</label>
+    <textarea id="s-notas"></textarea>
+    <button class="btn" onclick="addSesion()">Guardar sesión</button>
+  </div>
+  <div class="card">
+    <h2>📈 Historial de sesiones</h2>
+    <table><thead><tr><th>Fecha</th><th>Quién</th><th>Foco</th><th>RPE</th><th>Notas</th><th></th></tr></thead><tbody id="s-list"></tbody></table>
+    <p class="muted" id="s-count" style="margin-top:8px"></p>
+  </div>
+  <div class="card">
+    <h2>📏 Mediciones (cada 2-4 semanas)</h2>
+    <p class="muted">El progreso real se ve acá, no en la balanza diaria. Si la cintura baja y el peso se mantiene, están ganando músculo y perdiendo grasa: eso es ganar.</p>
+    <div class="grid2" style="margin-top:8px">
+      <div><label>Fecha</label><input type="date" id="m-fecha"></div>
+      <div><label>Quién</label><select id="m-quien"><option value="ka">Ka</option><option value="lolo">Lolo</option></select></div>
+      <div><label>Peso (kg)</label><input type="number" id="m-peso" step="0.1"></div>
+      <div><label>Cintura (cm)</label><input type="number" id="m-cint" step="0.5"></div>
+      <div><label>Equilibrio: seg. en 1 pie</label><input type="number" id="m-eq"></div>
+      <div><label>Fuerza de referencia (kg)</label><input type="number" id="m-fz" step="0.5"></div>
+    </div>
+    <button class="btn green" onclick="addMed()">Guardar medición</button>
+    <h3>Ka</h3><table><thead><tr><th>Fecha</th><th>Peso</th><th>Cintura</th><th>Equil.(s)</th><th>Fuerza</th><th></th></tr></thead><tbody id="m-ka"></tbody></table>
+    <p class="muted" id="m-ka-delta"></p>
+    <h3>Lolo</h3><table><thead><tr><th>Fecha</th><th>Peso</th><th>Cintura</th><th>Equil.(s)</th><th>Fuerza</th><th></th></tr></thead><tbody id="m-lolo"></tbody></table>
+    <p class="muted" id="m-lolo-delta"></p>
+  </div>
+  <div class="card">
+    <h2>🦵 Guía anti-calambres (Ka)</h2>
+    <ul style="padding-left:18px;font-size:13px;line-height:1.6">
+      <li><b>Estirar pantorrillas e isquios todas las noches</b> (30 seg por lado, 2 rondas) — es lo que más evidencia tiene.</li>
+      <li><b>Hidratación</b>: tu contador de agua está en el Diario. Los calambres nocturnos empeoran con deshidratación leve.</li>
+      <li><b>Magnesio bisglicinato nocturno</b>: todas las noches por 4 semanas, y evaluá.</li>
+      <li><b>Banana o cítricos</b> post-entrenamiento (potasio).</li>
+      <li>Si aparecen calambres <i>durante</i> el ejercicio, avisale a la entrenadora.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+<footer>Esta app es informativa y de seguimiento personal. No reemplaza diagnóstico ni indicación médica ni nutricionista. Hecha para Ka & Lolo · julio 2026.</footer>
+
+<script>
+/* ---------- estado ---------- */
+const DEFAULTS = {
+  ka:   {name:'Ka',   peso:61, alt:160, edad:47, cint:87, act:1.375, obj:'recomp',  etapa:'postmenopausia'},
+  lolo: {name:'Lolo', peso:70, alt:165, edad:44, cint:83, act:1.375, obj:'deficit', etapa:'perimenopausia'}
+};
+let store = {};
+try { store = JSON.parse(localStorage.getItem('saludKL')||'{}'); } catch(e){ store = {}; }
+store.perfiles = store.perfiles || JSON.parse(JSON.stringify(DEFAULTS));
+store.sesiones = store.sesiones || [];
+store.mediciones = store.mediciones || [];
+store.diario = store.diario || {};
+store.agua = store.agua || {};
+if(!['neo','neoluz'].includes(store.tema)) store.tema='neo';
+store.cacas = store.cacas || {};
+store.sups = store.sups || [
+  {who:'ambas', nombre:'Creatina monohidrato 3-5 g/día', nota:'Fuerza + masa muscular + posible beneficio cognitivo en meno/peri. Todos los días.'},
+  {who:'ka', nombre:'Magnesio bisglicinato (noche)', nota:'Para calambres y sueño. Todas las noches, no "a veces".'}
+];
+store.checks = store.checks || {};
+function save(){ try{ localStorage.setItem('saludKL', JSON.stringify(store)); }catch(e){} }
+function today(){ return new Date().toISOString().slice(0,10); }
+function setTheme(t){ document.body.dataset.theme=t; store.tema=t; save(); }
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('nav button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    ['diario','rec','calc','tren'].forEach(t=>document.getElementById('tab-'+t).style.display = (t===b.dataset.tab?'':'none'));
+  };
+});
+
+/* ---------- base de alimentos [nombre visible, kcal, palabras clave] ---------- */
+const FOODS=[
+['Arroz blanco cocido — 1 taza',200,'arroz'],['Arroz integral cocido — 1 taza',215,'arroz integral'],
+['Fideos comunes cocidos — 1 plato',350,'fideos'],['Fideos de arroz — 1 plato',330,'fideos de arroz'],
+['Fideos de legumbre (lenteja/garbanzo) — 1 plato',320,'fideos de legumbre|fideos sin harina'],
+['Ñoquis con salsa — 1 plato',430,'ñoquis|noquis'],['Ravioles con salsa — 1 plato',450,'ravioles'],
+['Pizza — 1 porción',270,'pizza'],['Empanada — 1',290,'empanada'],['Tarta de verdura — 1 porción',320,'tarta'],
+['Pan francés — 1 mignon',150,'pan'],['Pan lactal — 1 rodaja',80,'lactal|tostada'],
+['Medialuna — 1',190,'medialuna|factura'],['Galletitas dulces — 3',140,'galletitas'],['Galletitas de agua — 5',120,'galletitas de agua|crackers'],
+['Avena — ½ taza en seco',150,'avena'],['Granola — ½ taza',210,'granola'],['Panqueques de avena y banana — 2',260,'panqueque'],
+['Huevo — 1',75,'huevo'],['Huevos revueltos — 2 con oliva',195,'revuelto|huevos revueltos'],['Tortilla de verduras — 1 porción',180,'tortilla'],
+['Atún al agua — 1 lata',110,'atun|atún'],['Atún en aceite escurrido — 1 lata',180,'atun en aceite'],
+['Merluza — 1 filet',150,'merluza|pescado'],['Salmón — porción 150g',310,'salmon|salmón'],['Ceviche — 1 plato',220,'ceviche'],
+['Sushi — 1 pieza',45,'sushi pieza'],['Sushi — 10 piezas',450,'sushi'],['Pokebowl completo — 1',550,'poke'],
+['Bife de carne magra — 150g',330,'bife|carne|churrasco'],['Asado — 1 porción',500,'asado|costilla'],
+['Milanesa frita — 1',420,'milanesa frita'],['Milanesa al horno — 1',300,'milanesa'],['Milanesa napolitana — 1',520,'napolitana'],
+['Pollo pechuga plancha — 150g',250,'pollo|pechuga'],['Pata muslo sin piel horno — 1',290,'pata muslo'],
+['Hamburguesa casera completa — 1',550,'hamburguesa'],['Choripán — 1',450,'choripan|chori'],
+['Salchichas — 2',260,'salchicha|pancho'],['Jamón cocido — 2 fetas',60,'jamon|jamón'],
+['Lentejas cocidas — 1 taza',230,'lentejas|lenteja'],['Guiso de lentejas — 1 plato',420,'guiso'],
+['Garbanzos cocidos — 1 taza',270,'garbanzo'],['Hamburguesa de lentejas — 1',180,'hamburguesa de lentejas'],
+['Hummus — 2 cdas',70,'hummus'],
+['Papa hervida/horno — 1 mediana',130,'papa'],['Papas fritas — 1 porción',400,'papas fritas'],['Puré de papa — 1 taza',210,'pure|puré'],
+['Batata — 1 mediana',115,'batata'],['Choclo — 1',100,'choclo'],['Zapallo/calabaza — 1 taza',40,'zapallo|calabaza'],
+['Brócoli — 1 taza',35,'brocoli|brócoli'],['Zanahoria — 1',30,'zanahoria'],['Tomate — 1',25,'tomate'],
+['Pepino — ½',10,'pepino'],['Zucchini — 1',20,'zucchini|zapallito'],['Cebolla — 1',40,'cebolla'],
+['Espinaca/acelga cocida — 1 taza',40,'espinaca|acelga'],['Ensalada mixta sin aderezo — 1 plato',60,'ensalada'],
+['Aceite de oliva — 1 cda',120,'aceite|oliva'],['Palta — ½',120,'palta'],['Mayonesa — 1 cda',90,'mayonesa'],
+['Sopa de verduras — 1 plato',120,'sopa'],['Sopa crema — 1 plato',200,'sopa crema|crema de'],['Locro — 1 plato',480,'locro'],
+['Banana — 1',105,'banana'],['Naranja — 1',65,'naranja'],['Mandarina — 1',45,'mandarina'],['Manzana — 1',95,'manzana'],
+['Pera — 1',100,'pera'],['Kiwi — 1',45,'kiwi'],['Frutillas — 1 taza',50,'frutilla'],['Uvas — 1 taza',60,'uva'],
+['Ensalada de frutas — 1 bol',120,'ensalada de frutas'],
+['Vino — 1 copa',125,'vino'],['Cerveza — 1 lata',150,'cerveza|birra'],['Fernet con cola — 1 vaso',230,'fernet'],
+['Gaseosa — 1 vaso',100,'gaseosa|coca'],['Jugo exprimido — 1 vaso',110,'jugo'],['Café solo o mate',5,'cafe|café|mate'],
+['Café con leche',80,'cafe con leche'],['Leche — 1 vaso',120,'leche'],['Yogur — 1 pote',120,'yogur'],
+['Queso port salut — 30g',110,'queso'],['Queso rallado — 1 cda',30,'queso rallado'],['Queso untable — 1 cda',50,'untable|casancrem'],
+['Queso de máquina — 1 feta',60,'queso de maquina|feta de queso|fetas de queso'],
+['Manteca — 1 cdita (10 g)',72,'manteca'],['Dulce de leche — 1 cda',60,'dulce de leche'],
+['Salame — 4 fetas finas',130,'salame|fetas de salame'],
+['Chocolate — 2 cuadraditos (20g)',110,'chocolate'],['Chocolate — ½ tableta (50g)',270,'media tableta'],
+['Alfajor — 1',180,'alfajor'],['Helado — 1 bocha',150,'helado'],['Flan/postre — 1',180,'flan|postre'],
+['Azúcar — 1 cda',40,'azucar|azúcar'],['Mermelada — 1 cda',50,'mermelada'],['Miel — 1 cda',60,'miel'],
+['Nueces — 1 puñado',180,'nuez|nueces'],['Almendras — 1 puñado',170,'almendra'],['Maní — 1 puñado',160,'mani|maní'],
+['Barrita de cereal — 1',100,'barrita'],['Snack copetín — 1 puñado',160,'papitas|snack|chizitos']
+];
+
+/* ---------- diario ---------- */
+let dwho='ka';
+function setDiarioWho(w){
+  dwho=w;
+  document.querySelectorAll('#tab-diario .who button').forEach(b=>b.classList.remove('on'));
+  document.querySelector('#tab-diario .who .'+w).classList.add('on');
+  document.getElementById('d-name').textContent=store.perfiles[w].name;
+  document.getElementById('a-name').textContent=store.perfiles[w].name;
+  renderDiario(); renderAgua();
+}
+function buscarAlimento(){
+  const q=document.getElementById('d-buscar').value.toLowerCase().trim();
+  const el=document.getElementById('d-resultados');
+  if(q.length<2){ el.innerHTML=''; return; }
+  const hits=FOODS.filter(f=>f[0].toLowerCase().includes(q)||f[2].split('|').some(k=>k.includes(q))).slice(0,8);
+  el.innerHTML=hits.map(f=>{
+    const safe=f[0].replace(/'/g,"\\'");
+    return `<div class="foodresult"><span>${f[0]} · <b>${f[1]} kcal</b></span>
+      <span class="qbtns">
+        <button onclick="addFood('${safe} (½)',${Math.round(f[1]*0.5)})">½</button>
+        <button onclick="addFood('${safe}',${f[1]})">1</button>
+        <button onclick="addFood('${safe} (x2)',${f[1]*2})">2</button>
+      </span></div>`;
+  }).join('') || '<p class="muted" style="margin-top:6px">Sin resultados — usá el estimador de abajo.</p>';
+}
+function dkey(){ return document.getElementById('d-fecha').value || today(); }
+function addFood(n,k){
+  const d=dkey();
+  store.diario[d]=store.diario[d]||{ka:[],lolo:[]};
+  store.diario[d][dwho].push({n,k});
+  save(); renderDiario();
+  document.getElementById('d-buscar').value=''; document.getElementById('d-resultados').innerHTML='';
+}
+/* estimador por ingredientes */
+function estimarPlato(){
+  const txt=document.getElementById('d-custom-n').value.toLowerCase();
+  const out=document.getElementById('d-estimado');
+  if(txt.trim().length<3){ out.innerHTML='<span class="muted">Escribí el plato primero.</span>'; return; }
+  const menos=/(poquito|poco de|poca |chico|chica |media |medio )/, mas=/(mucho|mucha|doble|grande|bien cargad)/;
+  let total=0, partes=[], usados=new Set();
+  FOODS.forEach(f=>{
+    const keys=f[2].split('|');
+    for(const k of keys){
+      const idx=txt.indexOf(k);
+      if(idx>=0 && !usados.has(f[0])){
+        /* mirar las 3 palabras anteriores por modificador */
+        const antes=txt.slice(Math.max(0,idx-25),idx);
+        let mult=1;
+        if(menos.test(antes)) mult=0.5;
+        else if(mas.test(antes)) mult=1.5;
+        total+=Math.round(f[1]*mult);
+        partes.push(`${f[0].split(' — ')[0]}${mult!==1?' ×'+mult:''} (${Math.round(f[1]*mult)})`);
+        usados.add(f[0]);
+        break;
+      }
+    }
+  });
+  if(!total){ out.innerHTML='<span class="muted">No reconocí ingredientes. Probá con nombres simples: fideos, atún, brócoli...</span>'; return; }
+  const nombre=document.getElementById('d-custom-n').value;
+  out.innerHTML=`Reconocí: ${partes.join(' + ')} = <b>~${total} kcal</b><br>
+    <button class="btn small green" style="margin-top:8px" onclick="addFood('${nombre.replace(/'/g,"\\'")}',${total});document.getElementById('d-custom-n').value='';this.parentElement.innerHTML=''">✔ Agregar al diario</button>
+    <input type="number" value="${total}" style="width:90px;display:inline-block;margin-left:8px" onchange="this.previousElementSibling.setAttribute('onclick','addFood(\\'${nombre.replace(/'/g,"\\\\'")}\\',' + this.value + ')')" title="Ajustar kcal">`;
+}
+function delFood(i){ store.diario[dkey()][dwho].splice(i,1); save(); renderDiario(); }
+function metaKcal(w){
+  const d=store.perfiles[w];
+  const tmb=10*d.peso+6.25*d.alt-5*d.edad-161, tdee=tmb*d.act;
+  return Math.round(d.obj==='deficit'?tdee-450:d.obj==='recomp'?tdee-250:tdee);
+}
+function renderDiario(){
+  const d=dkey(), items=(store.diario[d]&&store.diario[d][dwho])||[];
+  const total=items.reduce((a,x)=>a+x.k,0), meta=metaKcal(dwho);
+  document.getElementById('d-total').textContent=total;
+  document.getElementById('d-meta').textContent=meta+' kcal';
+  const pct=Math.min(100,total/meta*100);
+  const bar=document.getElementById('d-bar');
+  bar.style.width=pct+'%'; bar.classList.toggle('over',total>meta);
+  document.getElementById('d-resto').textContent = total>meta
+    ? `Te pasaste ~${total-meta} kcal. No es drama: mirá el patrón semanal, no el día.`
+    : `Quedan ~${meta-total} kcal para hoy.`;
+  document.getElementById('d-items').innerHTML=items.map((x,i)=>
+    `<tr><td>${x.n}</td><td style="text-align:right">${x.k} kcal</td><td style="width:30px"><button class="del" onclick="delFood(${i})">✕</button></td></tr>`).join('') || '<tr><td class="muted">Nada registrado en esta fecha.</td></tr>';
+  /* resumen últimos 7 días */
+  let dias=0, suma=0;
+  for(let i=0;i<7;i++){
+    const dt=new Date(); dt.setDate(dt.getDate()-i);
+    const k=dt.toISOString().slice(0,10);
+    const its=(store.diario[k]&&store.diario[k][dwho])||[];
+    if(its.length){ dias++; suma+=its.reduce((a,x)=>a+x.k,0); }
+  }
+  document.getElementById('d-semana').textContent = dias
+    ? `📅 Última semana: registraste ${dias} día${dias>1?'s':''}, promedio ${Math.round(suma/dias)} kcal/día (meta: ${meta}).`
+    : '📅 Última semana: sin registros todavía.';
+  renderAgua(); renderSupsDiario(); renderCaca();
+}
+/* agua */
+function aguaMeta(w){ return Math.ceil(store.perfiles[w].peso*33/250); } /* vasos de 250ml */
+function renderAgua(){
+  const d=dkey(); store.agua[d]=store.agua[d]||{ka:0,lolo:0};
+  const n=store.agua[d][dwho], meta=aguaMeta(dwho);
+  document.getElementById('a-meta').textContent=`${meta} vasos (~${(store.perfiles[dwho].peso*0.033).toFixed(1)} L)`;
+  let html='';
+  for(let i=0;i<Math.max(meta,n);i++) html+=`<span class="vaso ${i<n?'on':''}" onclick="setAgua(${i})">🥤</span>`;
+  document.getElementById('a-vasos').innerHTML=html;
+  document.getElementById('a-estado').textContent = n>=meta? '✔ Meta cumplida — tus calambres lo agradecen.' : `Van ${n} de ${meta} vasos.`;
+}
+function setAgua(i){
+  const d=dkey(); store.agua[d]=store.agua[d]||{ka:0,lolo:0};
+  store.agua[d][dwho] = (store.agua[d][dwho]===i+1)? i : i+1;
+  save(); renderAgua();
+}
+
+/* ---------- calculadora ---------- */
+let person='ka';
+function setPerson(p){
+  person=p;
+  document.querySelectorAll('#tab-calc .who button').forEach(b=>b.classList.remove('on'));
+  document.querySelector('#tab-calc .who .'+p).classList.add('on');
+  loadProfile(); calc();
+}
+function loadProfile(){
+  const d=store.perfiles[person];
+  document.getElementById('c-name').textContent=d.name;
+  document.getElementById('c-peso').value=d.peso; document.getElementById('c-alt').value=d.alt;
+  document.getElementById('c-edad').value=d.edad; document.getElementById('c-cint').value=d.cint;
+  document.getElementById('c-act').value=d.act; document.getElementById('c-obj').value=d.obj;
+}
+function readProfile(){
+  return {...store.perfiles[person],
+    peso:+document.getElementById('c-peso').value, alt:+document.getElementById('c-alt').value,
+    edad:+document.getElementById('c-edad').value, cint:+document.getElementById('c-cint').value,
+    act:+document.getElementById('c-act').value, obj:document.getElementById('c-obj').value};
+}
+function saveProfile(){ store.perfiles[person]=readProfile(); save(); alert('Datos guardados ✔'); renderDiario(); }
+function calc(){
+  const d=readProfile();
+  if(!d.peso||!d.alt||!d.edad) return;
+  const m=d.alt/100, imc=d.peso/(m*m), whtr=d.cint? d.cint/d.alt : null;
+  const tmb=10*d.peso+6.25*d.alt-5*d.edad-161, tdee=tmb*d.act;
+  let objCal,objTxt;
+  if(d.obj==='deficit'){ objCal=tdee-450; objTxt='déficit ~450 kcal → ~0.4 kg/sem de grasa'; }
+  else if(d.obj==='recomp'){ objCal=tdee-250; objTxt='déficit suave ~250 kcal: baja grasa sin frenar el músculo'; }
+  else { objCal=tdee; objTxt='mantenimiento'; }
+  const prot=[Math.round(d.peso*1.6),Math.round(d.peso*2.0)];
+  const fibra = person==='ka'? ['30–35 g','soluble: avena, lentejas, psyllium → baja LDL'] : ['25–30 g','lentejas, garbanzos, verduras, frutas'];
+  const agua=(d.peso*0.033).toFixed(1);
+  let imcCat = imc<18.5?'bajo':imc<25?'normal':imc<30?'sobrepeso leve':'alto';
+  let whtrFlag = whtr==null?'':(whtr<0.5?'<span class="flag good">✔ Meta lograda (&lt;0.50)</span>':'<span class="flag bad">Meta: bajar de '+Math.round(d.alt*0.5)+' cm (&lt;0.50)</span>');
+  document.getElementById('c-res').innerHTML=`
+    <div class="box"><span>IMC</span><b>${imc.toFixed(1)}</b><span>${imcCat}</span></div>
+    <div class="box"><span>Cintura/Altura</span><b>${whtr?whtr.toFixed(2):'—'}</b>${whtrFlag}</div>
+    <div class="box"><span>Metabolismo basal</span><b>${Math.round(tmb)}</b><span>kcal/día</span></div>
+    <div class="box"><span>Gasto total (TDEE)</span><b>${Math.round(tdee)}</b><span>kcal/día</span></div>
+    <div class="box"><span>Calorías objetivo</span><b>${Math.round(objCal)}</b><span>${objTxt}</span></div>
+    <div class="box"><span>Proteína diaria</span><b>${prot[0]}–${prot[1]} g</b><span>clave para no perder músculo (${d.etapa})</span></div>
+    <div class="box"><span>Fibra diaria</span><b>${fibra[0]}</b><span>${fibra[1]}</span></div>
+    <div class="box"><span>Agua</span><b>${agua} L</b><span>+500 ml los días de entrenamiento</span></div>`;
+}
+
+/* ---------- recetario (50, detallado, cantidades para 2) ---------- */
+const RECETAS=[
+/* ==== SOPAS (10) ==== */
+{n:'🎃 Crema de zapallo y jengibre',cat:'sopa',t:['ldl','sinharina','sinlacteos','fibra'],cred:'estilo Narda Lepes',
+ i:'600 g de zapallo o calabaza en cubos · 1 cebolla · 1 cda de jengibre rallado (o ½ cdita en polvo) · 750 ml de caldo (o agua + 1 cubito bajo en sodio) · 1 cda de oliva · sal y pimienta',
+ s:['Calentá la oliva en una olla y cociná la cebolla picada 5 min a fuego medio, hasta transparente.','Sumá el zapallo en cubos y el jengibre, revolvé 2 min para que tome sabor.','Cubrí con el caldo y cociná 20 min, hasta que el zapallo se deshaga al pincharlo.','Licuá (o mixer) hasta que quede sedosa. Si está espesa, agregá caldo de a poco.','Probá y ajustá sal. Serví caliente.'],
+ g:'Serví en bowl con un hilito de oliva en espiral, pimienta negra recién molida y unas semillas o nueces picadas en el centro. El naranja intenso hace todo el trabajo.',
+ w:'Saciante, 0 grasa saturada, fibra. La cremosidad sale del zapallo licuado, no de crema.'},
+{n:'🥦 Crema de brócoli y papa',cat:'sopa',t:['sinharina','sinlacteos','fibra'],cred:'propia',
+ i:'1 brócoli mediano en arbolitos · 1 papa mediana en cubos · 1 cebolla · 1 diente de ajo · 750 ml de caldo · 1 cda de oliva',
+ s:['Sofreí cebolla y ajo picados en oliva, 4 min.','Agregá la papa y el caldo; cociná 10 min.','Sumá el brócoli y cociná 7 min más — no más, para que no pierda el verde.','Licuá todo. La papa da la cremosidad que normalmente pondría la crema.','Ajustá sal y pimienta.'],
+ g:'Reservá 2 arbolitos de brócoli apenas hervidos y ponelos parados en el centro del plato con un toque de oliva: contraste de verdes.',
+ w:'Truco clave para Ka: cremosidad sin lácteos = sin grasa saturada.'},
+{n:'🍲 Sopa de lentejas y verduras',cat:'sopa',t:['ldl','prot','fibra','sinharina','sinlacteos'],cred:'estilo Paulina Cocina',
+ i:'1 taza de lentejas secas (remojadas 2 hs si son grandes) · 1 zanahoria · 1 cebolla · 1 tomate rallado · 1 rama de apio si hay · 1 cdita de pimentón · ½ cdita de comino · 1 litro de caldo · 1 cda de oliva',
+ s:['Sofreí cebolla, zanahoria y apio picados chiquitos en oliva, 6 min.','Agregá pimentón y comino, revolvé 30 segundos (que no se quemen).','Sumá el tomate rallado y cociná 3 min hasta que espese.','Agregá lentejas y caldo. Cociná 30-35 min a fuego medio, hasta lentejas tiernas.','Si querés más cremosa, licuá solo 1 cucharón y devolvelo a la olla.'],
+ g:'Un chorrito de oliva crudo encima + perejil picado. El verde sobre el marrón cambia el plato.',
+ w:'Fibra soluble (LDL ↓) + proteína. Más liviana que el guiso.'},
+{n:'🌽 Locro liviano de zapallo y choclo',cat:'sopa',t:['fibra','prot'],cred:'estilo Paulina Cocina',
+ i:'400 g de zapallo · 1 choclo desgranado (o 1 taza congelado) · 1 taza de porotos o garbanzos cocidos · 1 cebolla de verdeo · 1 cdita de pimentón dulce · 800 ml de caldo · 1 cda de oliva. SIN chorizo ni panceta.',
+ s:['Herví el zapallo en el caldo 15 min y pisalo grueso dentro de la olla: esa es la base cremosa.','Sumá choclo y legumbres, cociná 10 min más a fuego bajo, revolviendo para que no se pegue.','Aparte: calentá la oliva con el pimentón 30 segundos y sumá el verdeo picado. Apagá enseguida.','Serví el locro y coronalo con esa salsita roja (la "grasita" tradicional, versión oliva).'],
+ g:'Serví en cazuela o bowl profundo con la salsita roja en círculo y verdeo fresco. Parece el de la abuela, sin la siesta de 3 horas después.',
+ w:'El sabor patrio sin la bomba de grasa saturada.'},
+{n:'🧅 Sopa de cebolla al vino',cat:'sopa',t:['sinlacteos'],cred:'propia',
+ i:'3 cebollas grandes en pluma fina · 1 cda de oliva · ½ copa del vino que tienen abierto · 750 ml de caldo · 1 hoja de laurel · pimienta',
+ s:['Cociná las cebollas en oliva a fuego BAJO 25 min, revolviendo cada tanto. Paciencia: acá está todo el sabor. Deben quedar doradas, no quemadas.','Subí el fuego, agregá el vino y raspá el fondo de la olla 1 min.','Sumá caldo y laurel; 15 min a fuego medio.','Sacá el laurel, ajustá sal y pimienta.'],
+ g:'Bowl chico, pimienta gruesa y unas hebras de cebolla dorada reservadas encima. Sin pan ni queso gratinado queda liviana y apta para las dos.',
+ w:'Una copa de vino en la olla rinde más que en la copa 😉.'},
+{n:'🫘 Sopa de garbanzos y espinaca',cat:'sopa',t:['prot','fibra','sinharina','sinlacteos','ldl'],cred:'estilo Kulinaria',
+ i:'2 tazas de garbanzos cocidos · 2 puñados de espinaca · 2 dientes de ajo · 1 tomate rallado · 1 cdita de comino · ½ cdita de pimentón ahumado · 750 ml de caldo · 1 cda de oliva',
+ s:['Dorá el ajo laminado en oliva 1 min (que apenas tome color).','Agregá comino y pimentón, 20 segundos, y enseguida el tomate rallado. Cociná 3 min.','Sumá garbanzos y caldo; 15 min a fuego medio.','Apagá el fuego y agregá la espinaca: se cocina sola con el calor en 2 min.','Opcional: pisá unos garbanzos contra el borde para espesar.'],
+ g:'El contraste verde espinaca + dorado garbanzo ya es bonito. Terminá con pimentón espolvoreado en un borde del plato.',
+ w:'Legumbre + hoja verde: hierro y fibra. Rinde mucho.'},
+{n:'🥕 Crema de zanahoria y naranja',cat:'sopa',t:['sinharina','sinlacteos','fibra'],cred:'estilo Narda Lepes',
+ i:'5 zanahorias en rodajas · 1 cebolla · jugo de 1 naranja · 600 ml de caldo · 1 cda de oliva · jengibre opcional',
+ s:['Sofreí la cebolla en oliva 5 min; sumá las zanahorias 3 min más.','Cubrí con caldo y cociná 20 min hasta que estén blandas.','Licuá con el jugo de naranja agregado al final (así conserva el perfume).','Ajustá sal. Si quedó espesa, más caldo.'],
+ g:'Naranja sobre naranja: ralladura de cáscara por encima y una hojita verde (perejil, apio). Color vibrante asegurado.',
+ w:'Usa sus frutas de siempre en formato nuevo. Vitamina A + toque ácido.'},
+{n:'🥣 Sopa de la heladera',cat:'sopa',t:['fibra','sinlacteos'],cred:'estilo Narda Lepes',
+ i:'Todas las verduras que anden dando vueltas: ½ zucchini, ¼ zapallo, 1 zanahoria, tallos de brócoli, lo que haya · 750 ml de caldo · 1 cebolla · oliva',
+ s:['Sofreí la cebolla, sumá todas las verduras cortadas parejas (2 cm).','Caldo y 20 min de cocción.','Decidí el formato: licuada (crema) o con trozos (minestrón).','Plato completo: agregale un huevo poché — cascá el huevo en el caldo hirviendo suave y esperá 3 min.'],
+ g:'Si va con huevo, servilo entero en el centro y cortalo en la mesa: la yema naranja sobre la sopa es el momento del plato.',
+ w:'Filosofía Narda: no tirar nada. Cena de lunes perfecta.'},
+{n:'🌽 Chupe ligero de choclo',cat:'sopa',t:['prot'],cred:'estilo Rodrigo Fernandini',
+ i:'2 choclos desgranados (o 2 tazas) · 1 papa en cubos chicos · 2 huevos · ½ taza de leche vegetal o descremada · 1 cebolla · ají amarillo si consiguen (o ½ morrón) · 750 ml de caldo · oliva',
+ s:['Sofreí cebolla y ají/morrón picados 5 min.','Sumá choclo y papa, cubrí con caldo, 15 min.','Licuá LA MITAD de la sopa y devolvela: queda cremosa pero con textura.','Agregá la leche, calentá sin hervir.','Cascá los huevos enteros dentro, tapá y esperá 4 min: huevo escalfado dentro de la sopa.'],
+ g:'Serví con el huevo arriba, choclitos enteros visibles y perejil. En Perú lleva queso — acá el huevo hace su trabajo.',
+ w:'Sabor peruano de invierno sin queso ni leche entera.'},
+{n:'🍅 Sopa de tomates asados',cat:'sopa',t:['sinharina','sinlacteos','ldl'],cred:'propia',
+ i:'8 tomates maduros en mitades · 1 cebolla en cuartos · 4 dientes de ajo con piel · 2 cdas de oliva · orégano o albahaca · 500 ml de caldo',
+ s:['Poné tomates (boca arriba), cebolla y ajos en una fuente. Oliva, sal, orégano. Horno fuerte 30 min hasta que se doren los bordes.','Pelá los ajos (salen solos) y licuá todo con el caldo caliente.','Volvé a la olla, 5 min de fuego suave, ajustá sal y pimienta.'],
+ g:'Un remolino de oliva, hojas de albahaca fresca y pimienta. Rojo profundo — parece de restaurante y son 3 pasos.',
+ w:'El licopeno del tomate cocido se asocia a mejor salud cardiovascular.'},
+/* ==== PLATOS (18) ==== */
+{n:'🍛 Guiso de lentejas sin chorizo',cat:'plato',t:['ldl','fibra','prot','sinharina','sinlacteos'],cred:'estilo Paulina Cocina',
+ i:'1½ taza de lentejas · 1 zanahoria · 1 cebolla · ½ morrón · 2 tomates rallados (o ½ lata) · 1 papa o batata chica en cubos · 1 cdita pimentón · ½ cdita comino · 1 hoja de laurel · 1 litro de caldo · 1 cda de oliva',
+ s:['Sofreí cebolla, zanahoria y morrón picados en la oliva, 6-7 min hasta que ablanden.','Agregá pimentón y comino, 30 segundos, y el tomate. Cociná 3 min.','Sumá lentejas, papa, laurel y caldo. Fuego medio-bajo 40 min, revolviendo cada tanto.','Está listo cuando la lenteja se deshace apenas y el caldo espesó. Si falta líquido, agregá agua caliente.','Reposá 5 min antes de servir: mejora.'],
+ g:'Plato hondo, perejil fresco picado encima y un toque de oliva. El pancito quedó afuera — no lo va a extrañar nadie con la batata adentro.',
+ w:'Plato estrella: fibra soluble (LDL ↓), proteína, barato. Sin embutido no pierde alma, pierde grasa saturada.'},
+{n:'🥩 Bife chico + ensalada gigante',cat:'plato',t:['prot','sinharina','sinlacteos'],cred:'propia',
+ i:'2 bifes de 150 g de corte magro (lomo, cuadril, nalga) · hojas verdes abundantes · 1 tomate · ½ pepino · 1 zanahoria rallada · oliva y limón',
+ s:['Sacá la carne de la heladera 20 min antes (sella mejor).','Armá primero la ensalada: hojas de base, tomate en gajos, pepino en medialunas, zanahoria rallada arriba. Aliñá recién al servir.','Sartén o plancha BIEN caliente: 3 min por lado sin tocarla para que forme costra. Sal al final.','Dejá reposar el bife 3 min antes de cortar: retiene los jugos.'],
+ g:'Serví el bife en tiras en abanico sobre un costado del plato y la ensalada ocupando el resto. La proporción visual enseña la nutricional: carne acompañamiento, verdura protagonista.',
+ w:'No eliminamos la carne: 150 g magros, 1-2 veces por semana. El LDL de Ka lo agradece.'},
+{n:'🍗 Pollo al horno con batatas',cat:'plato',t:['prot','sinharina','sinlacteos'],cred:'propia',
+ i:'2 patas-muslo sin piel (o 2 pechugas) · 2 batatas en gajos · 1 cebolla en cuartos · 1 morrón en tiras · 2 cdas de oliva · romero u orégano · sal, pimienta, pimentón',
+ s:['Horno a 200°. Poné las verduras en la fuente, mezcladas con 1 cda de oliva y sal.','Frotá el pollo con oliva, sal, pimienta y pimentón (le da color dorado).','Pollo sobre las verduras, 45 min. A los 25 min, dales una vuelta a las batatas.','Está cuando el jugo del pollo sale claro al pincharlo.'],
+ g:'Servilo en la fuente misma a la mesa: batata naranja, morrón rojo, pollo dorado. Las fuentes rústicas son el emplatado más fácil que existe.',
+ w:'El intercambio ideal por carne roja: misma proteína, mucha menos grasa saturada.'},
+{n:'🍳 Tortilla de verduras al horno',cat:'plato',t:['prot','sinharina','sinlacteos'],cred:'propia',
+ i:'4 huevos · 2 zucchinis rallados (o 1 atado de espinaca) · 1 cebolla · 1 cda de oliva · sal, pimienta, nuez moscada si hay',
+ s:['Rallá los zucchinis, salalos y dejalos 10 min en un colador. Apretalos para sacar el agua (paso clave: si no, queda aguada).','Sofreí la cebolla picada 5 min.','Batí los huevos, mezclá con las verduras, salpimentá.','Verté en fuente aceitada, horno 180° por 20-25 min hasta que dore arriba y esté firme al centro.'],
+ g:'Dejala entibiar 5 min y cortala en cuadrados o cuñas prolijas. Con ensalada de tomate al lado: verde + rojo, plato completo.',
+ w:'Proteína barata, sin harina ni queso. Fría al otro día es almuerzo de tupper.'},
+{n:'🐟 Salteado de atún, arroz y verduras',cat:'plato',t:['prot','sinlacteos'],cred:'propia',
+ i:'2 latas de atún al agua escurrido · 2 tazas de arroz cocido (mejor de ayer) · 1 taza de brócoli en arbolitos chicos · 1 zanahoria en bastones finos · 1 cebolla · 2 cdas de salsa de soja · 1 cda de oliva',
+ s:['Sartén grande caliente con la oliva: cebolla 3 min, zanahoria 2 min, brócoli 3 min. Las verduras deben quedar crocantes.','Sumá el arroz frío desgranado y saltealo 3 min sin miedo al fuego fuerte.','Agregá la salsa de soja por los bordes de la sartén (se tuesta y perfuma).','Apagá el fuego y recién ahí sumá el atún en trozos grandes, mezclando suave para que no se haga puré.'],
+ g:'Bowl + palitos si tienen = noche de "restaurante asiático" en casa. Sésamo o verdeo picado encima si hay.',
+ w:'Proteína alta, cero grasa saturada, 15 minutos.'},
+{n:'🍝 Fideos con brócoli, ajo y atún',cat:'plato',t:['prot'],cred:'propia',
+ i:'200 g de fideos (mejor integrales; Lolo: de arroz o legumbre) · 1 brócoli en arbolitos · 3 dientes de ajo laminados · 1 lata de atún · 3 cdas de oliva · ají molido · sal',
+ s:['Poné a hervir los fideos. A los 4 minutos del final, tirá el brócoli A LA MISMA olla.','Mientras: dorá el ajo en la oliva a fuego bajo con una pizca de ají molido. Apagá apenas dore.','Colá fideos y brócoli guardando ½ taza del agua de cocción.','Todo a la sartén del ajo con un chorro del agua reservada: revolvé 1 min, se forma una salsita.','Atún al final, en trozos, fuego apagado.'],
+ g:'Plato playo, una vuelta de pimienta y oliva cruda. El brócoli medio deshecho ES la salsa — así va, no es error.',
+ w:'Con fideos de legumbre, Lolo también puede este mes. Integral suma fibra para Ka.'},
+{n:'🍔 Hamburguesas de lentejas',cat:'plato',t:['ldl','fibra','prot','sinlacteos'],cred:'estilo Paulina Cocina',
+ i:'2 tazas de lentejas cocidas y escurridas BIEN · ½ taza de avena (Lolo: reemplazar por 2 cdas de puré de papa) · 1 huevo · ½ cebolla picada finita · 1 cdita de comino · 1 cdita de pimentón · sal',
+ s:['Pisá las lentejas con pisapapas: puré grueso, con pedacitos (no licuadora: queda engrudo).','Mezclá con avena, huevo, cebolla y especias. Debe poder formarse un medallón que no se pegotee — si está húmedo, más avena; si se desarma, otro huevo.','Heladera 20 min (se firman solas).','Plancha con un toque de oliva: 4 min por lado SIN moverlas, hasta costra dorada.','Hacé doble tanda: crudas se congelan separadas por papel.'],
+ g:'Serví como plato: medallón + tomate en rodajas + palta en abanico. O en pan solo para quien coma harinas. Costra dorada visible = éxito.',
+ w:'El reemplazo directo de la carne picada. Fibra + proteína.'},
+{n:'🫘 Garbanzos guisados al pimentón',cat:'plato',t:['ldl','fibra','prot','sinharina','sinlacteos'],cred:'estilo Paulina Cocina',
+ i:'2 tazas de garbanzos cocidos · 1 lata de tomate (o 3 rallados) · 1 cebolla · 2 dientes de ajo · 1 cdita de pimentón ahumado (el ingrediente estrella) · 1 hoja de laurel · oliva',
+ s:['Sofreí cebolla y ajo 5 min.','Pimentón 20 segundos fuera del fuego (se quema fácil y amarga).','Tomate y laurel: 5 min hasta que espese.','Garbanzos + ½ taza de agua: 15 min a fuego bajo para que absorban la salsa.','Mejor si reposa. Al otro día está más rico aún.'],
+ g:'Cazuelita de barro si tienen, oliva cruda y perejil. Rojo intenso del pimentón = foto asegurada.',
+ w:'Sabor español, costo mínimo, fibra máxima.'},
+{n:'🍗 Milanesas de pollo al horno',cat:'plato',t:['prot'],cred:'estilo Paulina Cocina',
+ i:'2 pechugas abiertas en filetes finos · 1 huevo batido con ajo y perejil · pan rallado (o avena procesada) · rocío de oliva · limón',
+ s:['Pasá los filetes por el huevo condimentado y después por el pan rallado, apretando bien con la mano.','Fuente con papel de horno, milanesas arriba, rocío o pincelada de oliva por encima.','Horno FUERTE (220°) 12 min, dar vuelta, 8 min más. El horno fuerte es el secreto del dorado sin fritura.','Limón al servir.'],
+ g:'Con puré de calabaza naranja al lado en vez de papas fritas: el contraste dorado + naranja es más lindo que el beige + beige de siempre.',
+ w:'La milanesa no se negocia — se hornea. Mitad de calorías que la frita.'},
+{n:'🍚 Arroz chaufa de verduras y huevo',cat:'plato',t:['prot','sinlacteos'],cred:'estilo Rodrigo Fernandini',
+ i:'2 tazas de arroz cocido FRÍO (de ayer, clave) · 2 huevos · 2 cebollas de verdeo · 1 zanahoria en cubitos · ½ morrón · 2 cdas de salsa de soja · 1 cdita de jengibre rallado · aceite neutro u oliva suave',
+ s:['Batí los huevos y hacé un revuelto rápido en la sartén caliente. Retiralo.','Misma sartén, más fuego: zanahoria y morrón 3 min.','Arroz frío desgranado: saltealo 3-4 min hasta que "salte" suelto.','Soja por los bordes, jengibre, el huevo de vuelta y el verdeo al final.','Todo el proceso a fuego fuerte y rápido: eso es un chaufa.'],
+ g:'Serví en bowl apretando el arroz en una taza y desmoldando: domo perfecto con verdeo encima. Truco de restaurante, esfuerzo cero.',
+ w:'Arroz frío recalentado = almidón resistente: mejor para intestino y glucemia.'},
+{n:'🐔 Ají de pollo aligerado',cat:'plato',t:['prot'],cred:'estilo Rodrigo Fernandini',
+ i:'1 pechuga grande hervida y desmenuzada (guardá el caldo) · 1 cebolla · 2 dientes de ajo · ají amarillo en pasta si consiguen (o 1 morrón licuado) · 1 papa hervida pisada · ½ taza de leche vegetal · nueces picadas opcionales',
+ s:['Sofreí cebolla y ajo hasta transparentes; sumá el ají o morrón, 3 min.','Agregá la papa pisada y ½ taza del caldo de cocción: se forma la crema.','Pollo desmenuzado adentro, 5 min a fuego bajo.','Leche vegetal al final, sin hervir. Debe quedar cremoso, no líquido.','Ajustá sal. Las nueces le dan el toque peruano del queso, sin queso.'],
+ g:'Sobre arroz blanco, con huevo duro en cuartos y aceituna negra: la presentación clásica limeña. Amarillo + blanco + negro.',
+ w:'El clásico peruano espesado con papa en vez de pan y queso: mismo abrazo, menos grasa saturada.'},
+{n:'🐟 Pescado a la plancha con puré de zapallo',cat:'plato',t:['prot','ldl','sinharina','sinlacteos'],cred:'propia',
+ i:'2 filetes de merluza (u otro pescado accesible) · 500 g de zapallo · 1 cda de oliva · limón · pimienta',
+ s:['Herví o cociná al vapor el zapallo 15 min y pisalo con oliva, sal y pimienta.','Secá MUY bien los filetes con papel (secreto anti-pegado).','Plancha caliente con apenas oliva: 3 min del lado de la piel, 2 del otro. No lo muevas mientras se hace.','Limón recién exprimido al servir.'],
+ g:'Base de puré naranja, pescado encima, ralladura de limón y perejil. Restaurante de puerto, en casa.',
+ w:'Cuando el pescado esté a buen precio, esta es la compra. Omega-3 real.'},
+{n:'🥘 Pastel de papa y lentejas',cat:'plato',t:['ldl','fibra','prot','sinlacteos'],cred:'estilo Paulina Cocina',
+ i:'2 tazas de lentejas guisadas (usar receta del guiso, más seca) · 3 papas o 2 batatas · 1 cda de oliva · pimentón',
+ s:['Hacé un puré con las papas, oliva y sal (sin manteca ni leche: con el agua de cocción queda cremoso).','Fuente: capa de lentejas guisadas abajo, puré arriba.','Marcá surcos con un tenedor (se doran bonito) y espolvoreá pimentón.','Horno fuerte 20 min hasta gratinar los picos.'],
+ g:'Los surcos del tenedor dorados hacen todo. Porción cuadrada prolija con ensalada verde al lado.',
+ w:'Comfort food de invierno sin carne picada ni manteca.'},
+{n:'🥒 Zucchinis rellenos de arroz y atún',cat:'plato',t:['prot','sinharina','sinlacteos'],cred:'propia',
+ i:'3 zucchinis grandes a lo largo · 1 taza de arroz cocido · 1 lata de atún · 1 cebolla · 1 tomate picado · oliva y orégano',
+ s:['Cortá los zucchinis a lo largo y ahuecalos con cuchara. Picá la pulpa (va al relleno, no se tira).','Sofreí cebolla y la pulpa 5 min; mezclá con arroz, atún y tomate.','Rellená las "canoas", oliva por encima.','Horno 190° por 25 min hasta que el zucchini esté tierno y el relleno dorado.'],
+ g:'Dos canoas por plato, en paralelo, con orégano fresco. Verde por fuera, dorado por dentro.',
+ w:'Cuatro ingredientes que ya compran siempre, en formato nuevo.'},
+{n:'🎃 Calabaza rellena de garbanzos',cat:'plato',t:['fibra','prot','sinharina','sinlacteos','ldl'],cred:'estilo Narda Lepes',
+ i:'1 calabaza mediana en mitades · 1½ taza de garbanzos cocidos · 1 cebolla morada · comino y pimentón · oliva · perejil o verdeo',
+ s:['Sacá las semillas, pincelá las mitades con oliva y sal. Boca abajo al horno 200°, 40 min, hasta que un cuchillo entre sin resistencia.','Mientras: salteá la cebolla, sumá garbanzos con comino y pimentón, 5 min, que se doren un poco.','Dales vuelta a las calabazas y rellenalas con los garbanzos.','5 min más de horno todo junto.'],
+ g:'Se sirve la media calabaza entera por persona: el plato ES el zapallo. Verde picado encima. De los platos más fotogénicos del recetario.',
+ w:'Para cuando quieren "algo rico" un viernes sin pedir delivery.'},
+{n:'🍝 Fideos con bolognesa de lentejas',cat:'plato',t:['ldl','fibra','prot','sinlacteos'],cred:'estilo Paulina Cocina',
+ i:'200 g de fideos · 1½ taza de lentejas cocidas · 1 zanahoria rallada FINA · 1 cebolla · 2 tazas de salsa de tomate · orégano y laurel · oliva',
+ s:['Sofreí cebolla y zanahoria rallada 6 min (la zanahoria da el dulzor de la bolognesa clásica).','Sumá las lentejas y aplastá algunas con la cuchara.','Salsa de tomate, laurel, orégano: 15 min a fuego bajo. La lenteja absorbe y toma textura de carne picada.','Fideos al dente, mezclados en la sartén con la salsa 1 min.'],
+ g:'Nido de fideos, salsa en el centro, hoja de albahaca. A simple vista nadie nota que no hay carne — ese es el punto.',
+ w:'El truco anti-carne-picada más efectivo. Lolo: con fideos de legumbre.'},
+{n:'🍕 Pizza casera mejorada',cat:'plato',t:['fibra'],cred:'estilo Paulina Cocina',
+ i:'Masa: 250 g de harina (mitad integral) · 15 g de levadura · agua tibia · 1 cda de oliva. Arriba: salsa de tomate · la MITAD de la muzzarella de siempre · mucha verdura (morrón, cebolla, tomate, rúcula al salir)',
+ s:['Disolvé la levadura en ½ taza de agua tibia con una pizca de azúcar, 10 min hasta espumar.','Mezclá con la harina, oliva y sal; amasá 5 min. Dejá levar 1 hora tapada.','Estirala FINA (media pizza del grosor habitual = mitad de harina por porción).','Salsa, verduras crudas en fino, y al horno máximo 12-15 min. El queso: poco, y en los últimos 5 min.','Rúcula fresca al salir del horno.'],
+ g:'La rúcula encima de la pizza caliente, oliva y pimienta: pizzería de especialidad. Porción: 2 + ensalada, no 4 y siesta.',
+ w:'La pizza no se elimina, se mejora: masa fina integral, doble verdura, mitad de queso.'},
+{n:'🌮 Wok de pollo y verduras',cat:'plato',t:['prot','sinharina','sinlacteos'],cred:'estilo Kulinaria',
+ i:'1 pechuga en tiras finas · 1 taza de brócoli · 1 zanahoria en bastones · 1 cebolla en pluma · ½ morrón · 2 cdas de soja · 1 cdita de jengibre · aceite',
+ s:['Marina el pollo 10 min en la mitad de la soja con el jengibre.','Sartén MUY caliente: pollo 4 min hasta dorar. Retiralo.','Verduras en orden de dureza: zanahoria, brócoli, cebolla, morrón. 5 min, crocantes.','Pollo de vuelta + resto de soja + un chorrito de agua: 1 min y a la mesa.'],
+ g:'Los bastones de colores cortados parejos hacen el plato: naranja, verde, rojo. Sésamo por encima si hay.',
+ w:'La cena de 10 minutos que salva la semana.'},
+/* ==== BOWLS (9) ==== */
+{n:'🥗 Pokebowl casero de atún',cat:'bowl',t:['prot','sinlacteos'],cred:'propia',
+ i:'2 tazas de arroz cocido (tibio o frío) · 2 latas de atún · 1 palta · ½ pepino en medialunas · 1 zanahoria rallada · verdeo · salsa: 2 cdas de soja + jugo de ½ limón + 1 cdita de miel opcional',
+ s:['Base de arroz en cada bowl.','Acomodá por sectores (no mezclado): atún, palta en láminas, pepino, zanahoria. Cada ingrediente en su "gajo".','Mezclá la salsa y rociá todo.','Verdeo o sésamo por encima.'],
+ g:'La regla poke: ingredientes por sectores como una torta, colores alternados (rosa-verde-naranja-blanco). Se mezcla en la mesa, no antes.',
+ w:'Su antojo de siempre a un tercio del precio del delivery.'},
+{n:'🥗 Pokebowl de pollo y naranja',cat:'bowl',t:['prot','sinlacteos'],cred:'propia',
+ i:'2 tazas de arroz · 1 pechuga grillada en cubos · 1 naranja en gajos pelados a vivo (sin la telita blanca) · ½ pepino · ½ palta · verdeo',
+ s:['Grillá el pollo con sal y pimienta, cortalo en cubos.','Pelá la naranja "a vivo": cortá los gajos por dentro de las membranas con cuchillo. Guardá el jugo que escurre.','Armá por sectores sobre el arroz.','El jugo de naranja recogido + un toque de soja = el aliño. Nada más.'],
+ g:'Los gajos de naranja brillantes son la joya del bowl. Poné la palta al lado para el contraste verde-naranja.',
+ w:'El cítrico reemplaza al aderezo dulce comercial lleno de azúcar.'},
+{n:'🍣 Sushi-bowl deconstruido',cat:'bowl',t:['prot','sinlacteos'],cred:'propia',
+ i:'2 tazas de arroz cocido con 1 cda de vinagre y ½ cdita de azúcar mezclados en caliente · 2 latas de atún · 1 palta · ½ pepino en bastones finos · alga nori picada con tijera si hay · sésamo · soja para la mesa',
+ s:['Condimentá el arroz caliente con el vinagre azucarado, abanicalo y dejalo entibiar: eso es "arroz de sushi".','Bowl: arroz abajo, atún al centro, palta y pepino alrededor.','Nori en tiritas y sésamo por encima.','Soja al costado para mojar cada bocado.'],
+ g:'Todo cortado fino y ordenado en círculo: es el sushi de siempre sin armar rollos. Palillos obligatorios para el ritual.',
+ w:'El sushi comprado suma queso crema y frituras. Este no, y sale 4 veces menos.'},
+{n:'🥗 Ensalada completa de atún',cat:'bowl',t:['prot','sinharina','sinlacteos','ldl'],cred:'propia',
+ i:'2 latas de atún · 2 huevos duros · hojas verdes · 1 tomate · 1 taza de arroz frío o 1 papa hervida en cubos · oliva y limón',
+ s:['Base de hojas, arroz o papa distribuidos.','Tomate en gajos, huevo en cuartos, atún en el centro.','Aliná con oliva, limón y sal RECIÉN al servir (las hojas se mustian si esperás).'],
+ g:'El huevo en cuartos apuntando hacia afuera como pétalos, atún al centro. Clásico niçoise sin esfuerzo.',
+ w:'Almuerzo de 5 minutos con proteína completa.'},
+{n:'🫘 Ensalada tibia de garbanzos',cat:'bowl',t:['ldl','fibra','prot','sinharina','sinlacteos'],cred:'estilo Narda Lepes',
+ i:'2 tazas de garbanzos cocidos · 2 dientes de ajo · 1 cdita de pimentón · 1 tomate · ½ pepino · ¼ cebolla morada en pluma fina · limón y oliva · perejil',
+ s:['Salteá los garbanzos con ajo laminado y pimentón en oliva, 5 min, hasta que se doren un poco.','Mientras: tomate, pepino y cebolla en un bowl.','Volcá los garbanzos CALIENTES sobre las verduras frías.','Limón, oliva, perejil, y a la mesa antes de que se enfríe.'],
+ g:'El vapor que sale cuando lo servís es parte del plato. Bowl bajo y ancho para que se vea todo.',
+ w:'El contraste tibio-frío la convierte en plato de invierno. Llena de verdad.'},
+{n:'🥚 Ensalada de lentejas, tomate y huevo',cat:'bowl',t:['ldl','fibra','prot','sinharina','sinlacteos'],cred:'propia',
+ i:'2 tazas de lentejas cocidas (firmes, no de guiso) · 2 huevos duros · 1 tomate en cubos · ¼ cebolla picada fina · perejil abundante · oliva, limón, sal',
+ s:['Aliñá las lentejas aún TIBIAS con oliva, limón y sal: absorben el aliño (frías no).','Sumá tomate, cebolla y perejil cuando enfríen.','Huevo en cuartos encima al servir.'],
+ g:'En frasco de vidrio para llevar: lentejas abajo, tomate al medio, huevo arriba. El tupper más lindo de la oficina.',
+ w:'Aguanta 3 días en heladera. Tupper perfecto.'},
+{n:'🌽 Solterito de choclo, tomate y palta',cat:'bowl',t:['fibra','sinharina','sinlacteos'],cred:'estilo Rodrigo Fernandini',
+ i:'1 choclo cocido y desgranado · 2 tomates en cubos · 1 palta en cubos · ¼ cebolla morada picada fina · jugo de 1 limón · oliva · perejil o cilantro',
+ s:['Dejá la cebolla picada en el jugo de limón 10 min (se suaviza y queda rosada).','Mezclá choclo, tomate y palta en un bowl.','Sumá la cebolla CON su limón, oliva y sal.','Verde picado al final. Servir fresco.'],
+ g:'Cubos parejos de 1 cm en todo: amarillo, rojo, verde. La prolijidad del corte ES el emplatado en esta ensalada.',
+ w:'Guarnición peruana fresca para las carnes o el pollo.'},
+{n:'🥒 Bowl mediterráneo',cat:'bowl',t:['ldl','fibra','sinharina','sinlacteos'],cred:'estilo Kulinaria',
+ i:'1 pepino · 2 tomates · 1½ taza de garbanzos cocidos · ¼ cebolla morada · aceitunas si hay · oliva, limón, orégano abundante',
+ s:['Todo cortado en cubos parejos.','Aliñá con oliva, limón, sal y MUCHO orégano.','Reposá 10 min antes de servir: los sabores se casan.'],
+ g:'Bowl blanco si tienen: los colores mediterráneos brillan sobre blanco. Orégano espolvoreado al final, encima de todo.',
+ w:'Patrón mediterráneo: el que más evidencia tiene para bajar LDL.'},
+{n:'🍚 Ensalada de arroz frío completa',cat:'bowl',t:['prot','sinlacteos'],cred:'propia',
+ i:'2 tazas de arroz frío de ayer · 1 lata de atún o 2 huevos duros · ½ taza de choclo · 1 tomate · 1 zanahoria rallada · oliva y limón',
+ s:['Desgraná el arroz frío con tenedor.','Mezclá con choclo, tomate en cubos y zanahoria.','Atún o huevo encima, aliño de oliva y limón.'],
+ g:'Molde con taza (apretar y desmoldar) + los toppings alrededor. Las sobras nunca se vieron tan dignas.',
+ w:'Sobras convertidas en almuerzo: cero desperdicio.'},
+/* ==== DESAYUNOS (7) ==== */
+{n:'🥣 Avena nocturna con frutas y nueces',cat:'des',t:['ldl','fibra'],cred:'propia',
+ i:'½ taza de avena por persona · agua o bebida vegetal hasta cubrir · 1 fruta (banana, manzana, kiwi) · 1 puñado de nueces · canela',
+ s:['Anoche: avena + líquido en un frasco, revolver, heladera.','A la mañana: revolvé, sumá la fruta en cubos y las nueces.','Canela por encima. Si está espesa, un chorrito más de líquido.'],
+ g:'En frasco de vidrio con capas visibles: avena abajo, fruta al medio, nueces arriba. El desayuno de revista sale solo.',
+ w:'El betaglucano de la avena es la fibra que más baja el LDL. Desayuno nº1 para Ka, todos los días.'},
+{n:'🍳 Revuelto de huevos con verduras',cat:'des',t:['prot','sinharina','sinlacteos'],cred:'propia',
+ i:'2-3 huevos por persona · ¼ cebolla · ½ morrón o 1 puñado de espinaca · 1 cdita de oliva',
+ s:['Salteá la verdura picada 3 min.','Batí los huevos con sal y volcalos encima.','Fuego BAJO y espátula: movés suave hasta que cuaje cremoso (2 min). Sacalo apenas antes de que esté seco: sigue cocinándose en el plato.'],
+ g:'Sobre tostada de batata (receta más abajo) con tomate al lado. Amarillo, naranja, rojo: el desayuno de Lolo con colores de verano en invierno.',
+ w:'Proteína completa sin harinas ni lácteos.'},
+{n:'🥞 Panqueques de avena y banana',cat:'des',t:['fibra','prot'],cred:'estilo Paulina Cocina',
+ i:'1 banana madura · 1 huevo · 3 cdas de avena · canela. Rinde 4 panqueques chicos. (Lolo sin avena: solo banana + huevo, quedan más finitos)',
+ s:['Pisá la banana hasta puré, mezclá con huevo, avena y canela.','Sartén antiadherente apenas aceitada, fuego MEDIO-BAJO.','Cucharadas de mezcla: 2 min hasta que aparezcan burbujitas, vuelta con cuidado, 1 min más.','Son frágiles: panqueques chicos son más fáciles de dar vuelta.'],
+ g:'Torre de 3-4 con rodajas de banana y un hilo de miel. Frutillas si hay: rojo sobre dorado.',
+ w:'Dulce de desayuno sin harina ni azúcar agregada.'},
+{n:'🍹 Licuado de banana, naranja y avena',cat:'des',t:['fibra','sinlacteos'],cred:'propia',
+ i:'1 banana · jugo de 2 naranjas · 2 cdas de avena · 4-5 cubitos de hielo',
+ s:['Todo a la licuadora, 1 minuto entero (la avena necesita ese tiempo para integrarse).','Probá: si querés más dulce, ½ banana más (no azúcar).','La creatina de la mañana puede ir adentro: no se nota.'],
+ g:'Vaso alto, rodaja de naranja en el borde. Espeso tipo smoothie, no aguado: esa es la diferencia con un jugo.',
+ w:'Desayuno de días apurados que igual llena hasta el mediodía.'},
+{n:'🍠 Tostadas de batata',cat:'des',t:['sinharina','sinlacteos','fibra'],cred:'estilo Kulinaria',
+ i:'1 batata grande en láminas de 1 cm a lo largo · toppings: palta pisada con limón, huevo, tomate',
+ s:['Cortá las láminas parejas (1 cm: menos se queman, más no se cocinan).','A la tostadora: 2-3 ciclos hasta que estén tiernas al pincharlas y doradas en los bordes. (O plancha 4 min por lado.)','Cubrí como tostada: palta + huevo, o tomate + oliva + orégano.'],
+ g:'Dos "tostadas" naranjas con topping verde y el huevo encima. El reemplazo de pan más fotogénico que existe.',
+ w:'El pan de Lolo este mes. Más fibra y saciedad que el pan blanco.'},
+{n:'🥚 Huevos duros de emergencia',cat:'des',t:['prot','sinharina','sinlacteos'],cred:'propia',
+ i:'6 huevos · agua · sal',
+ s:['Huevos en agua fría que los cubra. Al hervor, contá 10 minutos exactos.','Pasalos a agua fría de inmediato (se pelan fácil y no queda el borde gris).','Con cáscara aguantan 5 días en heladera. Pelados, 2.'],
+ g:'No hay emplatado: hay estrategia. El domingo se hierven 6 y la semana tiene proteína lista contra el ataque a las galletitas.',
+ w:'Snack de proteína listo = la mejor defensa del déficit calórico.'},
+{n:'🥜 Mix de frutos secos porcionado',cat:'des',t:['ldl','sinharina','sinlacteos'],cred:'propia',
+ i:'200 g de nueces + 200 g de almendras + 100 g de maní sin sal · 10 bolsitas o frasquitos',
+ s:['Mezclá todo apenas llegás de la compra.','Dividí en porciones de 1 puñado (30 g, más o menos lo que entra en la palma).','Guardá el paquete grande ARRIBA del armario. Las porciones, a mano.'],
+ g:'La ciencia del porcionado: del paquete abierto se come el triple. De la bolsita, la bolsita.',
+ w:'Un puñado diario de nueces baja el LDL ~4-5%. Es snack y es tratamiento.'},
+/* ==== DULCES (6) ==== */
+{n:'🍎 Fruta con crocante de avena',cat:'post',t:['ldl','fibra'],cred:'propia',
+ i:'2 manzanas o bananas · ½ taza de avena · 1 puñado de nueces picadas · canela · 1 cdita de miel opcional',
+ s:['Cortá la fruta en cubos y cocinala 5 min en sartén (sola larga su jugo; la manzana con 1 cda de agua).','En OTRA sartén seca: tostá avena, nueces y canela 3 min revolviendo, hasta que perfume.','Fruta tibia abajo, crocante encima, hilo de miel si querés.'],
+ g:'En copa o vaso transparente en capas: se ven la fruta brillante y el crocante dorado. Postre de bodegón moderno.',
+ w:'El postre caliente de invierno sin manteca ni azúcar.'},
+{n:'🍊 Naranjas asadas con canela',cat:'post',t:['sinharina','sinlacteos','fibra'],cred:'estilo Narda Lepes',
+ i:'2 naranjas en mitades · canela · 1 cdita de miel opcional',
+ s:['Naranjas al medio, boca arriba en fuente.','Canela encima (y miel si va).','Horno fuerte o gratinador 10 min, hasta que los bordes se caramelicen.','Se comen con cuchara, calientes.'],
+ g:'La media naranja humeante con la cuchara clavada. Postre de 10 minutos que parece pensado.',
+ w:'El calor concentra el dulzor: parece postre, es una fruta.'},
+{n:'🍫 Budín de banana, avena y cacao',cat:'post',t:['fibra'],cred:'estilo Paulina Cocina',
+ i:'3 bananas MUY maduras (con manchitas: ahí está el dulzor) · 2 huevos · 1 taza de avena procesada o molida · 3 cdas de cacao amargo · 1 cdita de polvo de hornear · 1 cdita de esencia de vainilla si hay',
+ s:['Licuá o procesá todo junto 1 minuto hasta mezcla lisa.','Molde de budín aceitado o con papel de horno.','Horno 180° por 35-40 min. Listo cuando el cuchillo sale seco del centro.','Enfriar ANTES de cortar (caliente se desarma).','Congelá la mitad en rodajas: antojos futuros resueltos.'],
+ g:'Rodaja con rodajitas de banana fresca encima y cacao espolvoreado con colador. Café al lado: merienda completa.',
+ w:'El antojo de chocolate resuelto sin manteca ni azúcar agregada.'},
+{n:'🍏 Manzanas asadas rellenas',cat:'post',t:['ldl','fibra','sinharina'],cred:'propia',
+ i:'2 manzanas rojas · 2 cdas de avena · nueces picadas · canela · 1 cdita de miel',
+ s:['Sacá el centro de las manzanas con cuchillo o descorazonador, sin llegar al fondo (que quede piso).','Mezclá avena, nueces, canela y miel; rellená los huecos.','Fuente con un dedo de agua en el fondo (evita que se sequen).','Horno 180° por 30 min, hasta piel arrugada y relleno dorado.'],
+ g:'La manzana entera arrugadita con el relleno asomando es el postre de invierno definitivo. Servir tibia.',
+ w:'Clásico de abuela sin manteca. Se hacen 4 y quedan para dos días.'},
+{n:'🍨 "Helado" de banana y cacao',cat:'post',t:['sinharina','sinlacteos','fibra'],cred:'estilo Kulinaria',
+ i:'3 bananas maduras · 2 cdas de cacao amargo · nada más',
+ s:['Pelá y cortá las bananas en rodajas. Congelalas en bolsa 4+ horas (tené siempre un stock).','Licuadora o procesadora: bananas congeladas + cacao.','Procesá con paciencia raspando los bordes: primero parece arena, de golpe se vuelve crema. Ese es el momento.','Servir YA: es helado soft, no de corte.'],
+ g:'En bowl chico con nueces picadas o rodajas de banana. Nadie acepta que es solo fruta hasta que lo prueba.',
+ w:'Textura de helado real. Ingredientes: fruta y cacao, punto.'},
+{n:'🍫 Protocolo chocolate',cat:'post',t:[],cred:'propia',
+ i:'1 tableta de chocolate ≥70% cacao (la mejor que el presupuesto permita)',
+ s:['Comprá amargo ≥70%: menos azúcar, más satisfacción por cuadradito.','La dosis: 2 cuadraditos (20 g) después de la cena, no del paquete frente a la tele.','Servilos en un platito, con el café o té. El ritual es la mitad del gusto.','La tableta vive ARRIBA del armario, no en el cajón de la mesa ratona.'],
+ g:'Dos cuadraditos en platito chico al lado del café. Administrado así, el chocolate entra en cualquier plan.',
+ w:'No se prohíbe, se administra. El ≥70% tiene hasta evidencia cardiovascular leve a favor; el con leche solo suma grasa saturada.'}
+];
+const TAGNAMES={ldl:['↓ LDL','t-ldl'],prot:['Proteína','t-prot'],sinharina:['Sin harinas','t-sh'],sinlacteos:['Sin lácteos','t-sl'],fibra:['Fibra','t-fib']};
+const CREDLINKS={'estilo Paulina Cocina':'https://www.paulinacocina.net/?s=','estilo Narda Lepes':'https://www.google.com/search?q=narda+lepes+receta+','estilo Kulinaria':'https://www.google.com/search?q=kulinaria+receta+','estilo Rodrigo Fernandini':'https://www.google.com/search?q=rodrigo+fernandini+receta+','propia':null};
+let filter='all', catf='all';
+function renderRecetas(){
+  const list=RECETAS.filter(r=>(catf==='all'||r.cat===catf)&&(filter==='all'||r.t.includes(filter)));
+  document.getElementById('reccount').textContent=list.length+' receta'+(list.length===1?'':'s');
+  document.getElementById('reclist').innerHTML=list.map(r=>{
+    const base=CREDLINKS[r.cred];
+    const link=base?` <a href="${base}${encodeURIComponent(r.n.replace(/^\S+\s/,''))}" target="_blank" style="font-size:11px">ver original con foto ↗</a>`:'';
+    return `<details><summary>${r.n} <span class="credit">· ${r.cred}</span></summary>
+      <div style="margin-top:8px">${r.t.map(t=>`<span class="tag ${TAGNAMES[t][1]}">${TAGNAMES[t][0]}</span>`).join('')}${link}</div>
+      <p style="margin-top:8px"><b>Ingredientes (2 porciones):</b> ${r.i}</p>
+      <p style="margin-top:6px"><b>Paso a paso:</b></p><ol>${r.s.map(x=>`<li>${x}</li>`).join('')}</ol>
+      <div class="plate">🎨 <b>Plato bonito:</b> ${r.g}</div>
+      <div class="why">💡 ${r.w}</div>
+    </details>`;
+  }).join('') || '<p class="muted">Sin recetas para esa combinación de filtros.</p>';
+}
+document.querySelectorAll('#filters .pill').forEach(p=>{
+  p.onclick=()=>{document.querySelectorAll('#filters .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');filter=p.dataset.f;renderRecetas();};
+});
+document.querySelectorAll('#cats .pill').forEach(p=>{
+  p.onclick=()=>{document.querySelectorAll('#cats .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');catf=p.dataset.c;renderRecetas();};
+});
+
+/* ---------- entrenamiento ---------- */
+function addSesion(){
+  const s={fecha:document.getElementById('s-fecha').value||today(),
+    quien:document.getElementById('s-quien').value, foco:document.getElementById('s-foco').value,
+    rpe:document.getElementById('s-rpe').value, notas:document.getElementById('s-notas').value};
+  store.sesiones.unshift(s); save(); renderSesiones();
+  document.getElementById('s-notas').value='';
+}
+function delSesion(i){ store.sesiones.splice(i,1); save(); renderSesiones(); }
+function renderSesiones(){
+  document.getElementById('s-list').innerHTML=store.sesiones.map((s,i)=>
+    `<tr><td>${s.fecha}</td><td>${s.quien}</td><td>${s.foco}</td><td>${s.rpe||'—'}</td><td>${s.notas||''}</td><td><button class="del" onclick="delSesion(${i})">✕</button></td></tr>`).join('');
+  const mes = store.sesiones.filter(s=>s.fecha && s.fecha.slice(0,7)===today().slice(0,7)).length;
+  document.getElementById('s-count').textContent=`Sesiones este mes: ${mes} · Meta: 12-13 (3x semana)`;
+}
+function addMed(){
+  const m={fecha:document.getElementById('m-fecha').value||today(),
+    quien:document.getElementById('m-quien').value,
+    peso:+document.getElementById('m-peso').value||null, cint:+document.getElementById('m-cint').value||null,
+    eq:+document.getElementById('m-eq').value||null, fz:+document.getElementById('m-fz').value||null};
+  store.mediciones.push(m); store.mediciones.sort((a,b)=>a.fecha<b.fecha?-1:1); save(); renderMeds();
+}
+function delMed(i){ store.mediciones.splice(i,1); save(); renderMeds(); }
+function renderMeds(){
+  ['ka','lolo'].forEach(w=>{
+    const rows=store.mediciones.map((m,i)=>({m,i})).filter(x=>x.m.quien===w);
+    document.getElementById('m-'+w).innerHTML=rows.map(x=>
+      `<tr><td>${x.m.fecha}</td><td>${x.m.peso??'—'}</td><td>${x.m.cint??'—'}</td><td>${x.m.eq??'—'}</td><td>${x.m.fz??'—'}</td><td><button class="del" onclick="delMed(${x.i})">✕</button></td></tr>`).join('');
+    const d=document.getElementById('m-'+w+'-delta');
+    if(rows.length>=2){
+      const a=rows[0].m,b=rows[rows.length-1].m;
+      const dp=(b.peso&&a.peso)?(b.peso-a.peso).toFixed(1):null;
+      const dc=(b.cint&&a.cint)?(b.cint-a.cint).toFixed(1):null;
+      d.textContent=`Desde la primera medición: peso ${dp>0?'+':''}${dp??'—'} kg · cintura ${dc>0?'+':''}${dc??'—'} cm`;
+    } else d.textContent='Cargá al menos 2 mediciones para ver el progreso.';
+  });
+}
+
+/* ---------- suplementos ---------- */
+const SUPREC=[
+ {who:'Ka', n:'Vitamina D 🩺', w:'Tu análisis dio 29 ng/ml (insuficiente, deseable >30). En postmenopausia protege el hueso. Pedile la dosis al médico — típicamente 1000-2000 UI/día o dosis semanal.'},
+ {who:'Ka', n:'Psyllium (fibra soluble) 🩺*', w:'1 cda/día baja el LDL ~5-10% y ayuda al intestino. *Esperá el resultado del estudio de alergia/parásitos antes de sumarlo, y arrancá gradual.'},
+ {who:'Ambas', n:'Omega-3 (EPA/DHA) 🩺', w:'Comen poco pescado. Opción a conversar — los triglicéridos de ambas están bien, así que es opcional, no urgente.'},
+ {who:'Lolo', n:'Hierro — NO por ahora 🩺', w:'Su ferritina dio 15.7 (depósitos casi vacíos). Candidata a hierro PERO solo con indicación médica: el hierro de más hace daño.'},
+ {who:'Ambas', n:'Proteína en polvo (opcional)', w:'Solo si no llegan a su meta de proteína con comida (ver calculadora). Huevos, atún, lentejas y pollo pueden alcanzar.'},
+ {who:'Ka', n:'Colágeno / otros de moda', w:'Evidencia floja para el precio en Argentina. Creatina + vitamina D + magnesio ganan por goleada. No gastes acá.'}
+];
+function supRowsHTML(){
+  const t=today(); store.checks[t]=store.checks[t]||{};
+  return store.sups.map((s,i)=>`
+    <div class="checkrow">
+      <input type="checkbox" ${store.checks[t][i]?'checked':''} onchange="toggleCheck(${i},this.checked)">
+      <div><b>${s.nombre}</b> <span class="muted">(${s.who})</span>${s.nota?`<span class="sub">${s.nota}</span>`:''}</div>
+      <button class="del" onclick="delSup(${i})">✕</button>
+    </div>`).join('');
+}
+function renderSups(){
+  document.getElementById('sup-rec').innerHTML=SUPREC.map(s=>`
+    <details><summary>${s.n} <span class="muted" style="font-weight:400">· ${s.who}</span></summary><p style="margin-top:6px">${s.w}</p></details>`).join('');
+  renderSupsDiario();
+}
+function renderSupsDiario(){
+  const el=document.getElementById('sup-diario');
+  if(el) el.innerHTML=supRowsHTML();
+}
+function toggleCheck(i,v){ store.checks[today()][i]=v; save(); renderSupsDiario(); }
+/* ---------- registro de baño (solo Ka) ---------- */
+function setCaca(v){ store.cacas[dkey()]=v; save(); renderCaca(); }
+function renderCaca(){
+  const card=document.getElementById('caca-card');
+  if(!card) return;
+  card.style.display = dwho==='ka' ? '' : 'none';
+  if(dwho!=='ka') return;
+  const v=store.cacas[dkey()];
+  document.getElementById('caca-si').classList.toggle('on',v===true);
+  document.getElementById('caca-no').classList.toggle('on',v===false);
+  /* últimos 7 días */
+  let fila='', fuiste=0, marcados=0, seguidas=0, rachaAct=0;
+  for(let i=6;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const k=d.toISOString().slice(0,10);
+    const val=store.cacas[k];
+    const dia=['D','L','M','X','J','V','S'][d.getDay()];
+    let icon='·';
+    if(val===true){icon='✔';fuiste++;marcados++;rachaAct=0;}
+    else if(val===false){icon='✖';marcados++;rachaAct++;}
+    else rachaAct=0;
+    fila+=`<span style="display:inline-block;width:34px;text-align:center"><span class="muted" style="font-size:10px">${dia}</span><br>${icon}</span>`;
+  }
+  let msg=`Fuiste <b>${fuiste}</b> de los últimos 7 días.`;
+  if(rachaAct>=3) msg+=` <span style="color:var(--warn);font-weight:600">Llevás ${rachaAct} días sin ir — sumá agua, fibra (avena, lentejas) y movimiento; si pasa de 4-5 días, consultá.</span>`;
+  document.getElementById('caca-hist').innerHTML=fila+`<p style="margin-top:6px">${msg}</p>`;
+}
+/* ---------- respaldo ---------- */
+function exportarDatos(){
+  const blob=new Blob([JSON.stringify(store,null,1)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='salud-ka-lolo-respaldo-'+today()+'.json';
+  a.click();
+}
+function importarDatos(inp){
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.perfiles) throw 'formato';
+      localStorage.setItem('saludKL',JSON.stringify(data));
+      alert('Respaldo importado ✔ — recargando');
+      location.reload();
+    }catch(err){ alert('Ese archivo no parece un respaldo válido.'); }
+  };
+  r.readAsText(f);
+}
+function addSup(){
+  const n=document.getElementById('new-sup').value.trim();
+  if(!n) return;
+  store.sups.push({who:document.getElementById('new-sup-who').value,nombre:n,nota:''});
+  document.getElementById('new-sup').value=''; save(); renderSups();
+}
+function delSup(i){ store.sups.splice(i,1); save(); renderSups(); }
+
+/* ---------- init ---------- */
+document.body.dataset.theme=store.tema;
+document.getElementById('themepick').value=store.tema;
+document.getElementById('d-fecha').value=today();
+document.getElementById('s-fecha').value=today();
+document.getElementById('m-fecha').value=today();
+loadProfile(); calc(); renderRecetas(); renderSesiones(); renderMeds(); renderSups(); renderDiario();
+</script>
+</body>
+</html>
