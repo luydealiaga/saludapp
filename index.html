@@ -12,7 +12,6 @@
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     --font-head:var(--font); --radius:14px;
   }
-  /* ===== TEMA: Neo Oscuro (geométrico neón) ===== */
   body[data-theme=neo]{
     --bg:#101226; --card:#181a33; --ink:#eef0ff; --muted:#8e93b8;
     --accent:#ff3d71; --accent2:#22d3ee; --soft:#232649; --line:#2b2e55;
@@ -45,7 +44,6 @@
   body[data-theme=neo] .who button.ka.on{background:#332114;box-shadow:0 0 0 1px #ff8a3d}
   body[data-theme=neo] .who button.lolo.on{background:#122c3a;box-shadow:0 0 0 1px #22d3ee}
   body[data-theme=neo] .plate{border-left-color:#22d3ee}
-  /* ===== TEMA: Neo Claro ===== */
   body[data-theme=neoluz]{
     --bg:#f5f6fc; --card:#ffffff; --ink:#181b3a; --muted:#6d7194;
     --accent:#ff3d71; --accent2:#0e9db8; --soft:#eef0fa; --line:#e0e3f2;
@@ -165,7 +163,6 @@
 </nav>
 <main>
 
-<!-- ================= DIARIO ================= -->
 <section id="tab-diario">
   <div class="who">
     <button class="ka on" onclick="setDiarioWho('ka')">Ka 🔥</button>
@@ -175,7 +172,7 @@
     <h2>📒 ¿Qué comimos hoy?</h2>
     <div class="grid2">
       <div><label>Fecha</label><input type="date" id="d-fecha" onchange="renderDiario()"></div>
-      <div><label>Buscar alimento (elegí porción: ½, 1 o 2)</label><input type="text" id="d-buscar" placeholder="ej: pizza, vino, lentejas..." oninput="buscarAlimento()"></div>
+      <div><label>Buscar alimento (elegí porción: ½, 1 o 2)</label><input type="text" id="d-buscar" placeholder="ej: pizza, fernet, gomitas, nuggets..." oninput="buscarAlimento()"></div>
     </div>
     <div id="d-resultados"></div>
     <details style="margin-top:10px"><summary style="font-size:13px">✍️ Plato propio — lo estimo por ingredientes</summary>
@@ -238,7 +235,6 @@
   </div>
 </section>
 
-<!-- ================= RECETAS ================= -->
 <section id="tab-rec" style="display:none">
   <div class="notice">📖 <b>Recetario — cantidades para 2 porciones.</b> Las "estilo Paulina / Narda / Kulinaria / Fernandini" son adaptaciones inspiradas en su cocina, ajustadas a sus objetivos. 🍓 <b>Frutas para variar:</b> kiwi, frutillas, pera, palta, arándanos, ciruelas, uvas, melón.</div>
   <details><summary>📱 Agregar receta mía (de Instagram o donde sea)</summary>
@@ -278,7 +274,6 @@
   <div id="reclist"></div>
 </section>
 
-<!-- ================= CALCULADORA ================= -->
 <section id="tab-calc" style="display:none">
   <div class="who">
     <button class="ka on" onclick="setPerson('ka')">Ka 🔥</button>
@@ -313,7 +308,6 @@
   </div>
 </section>
 
-<!-- ================= ENTRENAMIENTO ================= -->
 <section id="tab-tren" style="display:none">
   <div class="card">
     <h2>📓 Registrar sesión con la entrenadora</h2>
@@ -361,7 +355,6 @@
   </div>
 </section>
 
-<!-- ================= TURNOS ================= -->
 <section id="tab-cal" style="display:none">
   <div class="card">
     <h2>📅 Turnos médicos</h2>
@@ -433,50 +426,113 @@ document.querySelectorAll('nav button').forEach(b=>{
   };
 });
 
-/* ---------- base de alimentos ---------- */
+/* ---------- base de alimentos [nombre, kcal, palabras clave] ---------- */
 const FOODS=[
+/* almidones y masas */
 ['Arroz blanco cocido — 1 taza',200,'arroz'],['Arroz integral cocido — 1 taza',215,'arroz integral'],
 ['Fideos comunes cocidos — 1 plato',350,'fideos'],['Fideos de arroz — 1 plato',330,'fideos de arroz'],
-['Fideos de legumbre (lenteja/garbanzo) — 1 plato',320,'fideos de legumbre|fideos sin harina'],
+['Fideos de legumbre — 1 plato',320,'fideos de legumbre|fideos sin harina'],
 ['Ñoquis con salsa — 1 plato',430,'ñoquis|noquis'],['Ravioles con salsa — 1 plato',450,'ravioles'],
-['Pizza — 1 porción',270,'pizza'],['Empanada — 1',290,'empanada'],['Tarta de verdura — 1 porción',320,'tarta'],
-['Pan francés — 1 mignon',150,'pan'],['Pan lactal — 1 rodaja',80,'lactal|tostada'],
-['Medialuna — 1',190,'medialuna|factura'],['Galletitas dulces — 3',140,'galletitas'],['Galletitas de agua — 5',120,'galletitas de agua|crackers'],
-['Avena — ½ taza en seco',150,'avena'],['Granola — ½ taza',210,'granola'],['Panqueques de avena y banana — 2',260,'panqueque'],
-['Huevo — 1',75,'huevo'],['Huevos revueltos — 2 con oliva',195,'revuelto|huevos revueltos'],['Tortilla de verduras — 1 porción',180,'tortilla'],
+['Canelones — 2',420,'canelones'],['Lasaña — 1 porción',480,'lasaña|lasagna'],
+['Pizza — 1 porción',270,'pizza'],['Fainá — 1 porción',150,'faina|fainá'],
+['Empanada al horno — 1',290,'empanada'],['Empanada frita — 1',330,'empanada frita'],
+['Tarta de verdura — 1 porción',320,'tarta'],['Pan francés — 1 mignon',150,'pan'],
+['Pan lactal — 1 rodaja',80,'lactal|tostada'],['Sándwich de miga — 2 triples',220,'miga|sandwich de miga'],
+['Tostado de jamón y queso — 1',380,'tostado|carlitos'],['Avena — ½ taza en seco',150,'avena'],
+['Granola — ½ taza',210,'granola'],['Panqueques de avena y banana — 2',260,'panqueque'],
+/* proteínas */
+['Huevo — 1',75,'huevo'],['Huevos revueltos — 2 con oliva',195,'revuelto|huevos revueltos'],
+['Tortilla de verduras — 1 porción',180,'tortilla'],['Tortilla de papa — 1 porción',320,'tortilla de papa'],
 ['Atún al agua — 1 lata',110,'atun|atún'],['Atún en aceite escurrido — 1 lata',180,'atun en aceite'],
-['Merluza — 1 filet',150,'merluza|pescado'],['Salmón — porción 150g',310,'salmon|salmón'],['Ceviche — 1 plato',220,'ceviche'],
+['Merluza — 1 filet',150,'merluza|pescado'],['Salmón — porción 150g',310,'salmon|salmón'],
+['Ceviche — 1 plato',220,'ceviche'],['Rabas — 1 porción',480,'rabas|calamares'],
 ['Sushi — 1 pieza',45,'sushi pieza'],['Sushi — 10 piezas',450,'sushi'],['Pokebowl completo — 1',550,'poke'],
 ['Bife de carne magra — 150g',330,'bife|carne|churrasco'],['Asado — 1 porción',500,'asado|costilla'],
-['Milanesa frita — 1',420,'milanesa frita'],['Milanesa al horno — 1',300,'milanesa'],['Milanesa napolitana — 1',520,'napolitana'],
+['Matambre a la pizza — 1 porción',450,'matambre'],['Bondiola — 1 porción',480,'bondiola'],
+['Milanesa frita — 1',420,'milanesa frita'],['Milanesa al horno — 1',300,'milanesa'],
+['Milanesa napolitana — 1',520,'napolitana'],['Sándwich de milanesa — 1',700,'sandwich de milanesa|milanga'],
 ['Pollo pechuga plancha — 150g',250,'pollo|pechuga'],['Pata muslo sin piel horno — 1',290,'pata muslo'],
-['Hamburguesa casera completa — 1',550,'hamburguesa'],['Choripán — 1',450,'choripan|chori'],
-['Salchichas — 2',260,'salchicha|pancho'],['Jamón cocido — 2 fetas',60,'jamon|jamón|fetas de jamon'],
+['Pollo frito — 2 presas',490,'pollo frito'],['Jamón cocido — 2 fetas',60,'jamon|jamón|fetas de jamon'],
+['Salame — 4 fetas finas',130,'salame|fetas de salame'],['Salchichas — 2',260,'salchicha'],
+['Provoleta — 1',340,'provoleta'],['Queso port salut — 30g',110,'queso'],
+['Queso de máquina — 1 feta',60,'queso de maquina|feta de queso|fetas de queso'],
+['Queso rallado — 1 cda',30,'queso rallado'],['Queso untable — 1 cda',50,'untable|casancrem'],
+/* legumbres y guarniciones */
 ['Lentejas cocidas — 1 taza',230,'lentejas|lenteja'],['Guiso de lentejas — 1 plato',420,'guiso'],
 ['Garbanzos cocidos — 1 taza',270,'garbanzo'],['Hamburguesa de lentejas — 1',180,'hamburguesa de lentejas'],
-['Hummus — 2 cdas',70,'hummus'],
-['Papa hervida/horno — 1 mediana',130,'papa'],['Papas fritas — 1 porción',400,'papas fritas'],['Puré de papa — 1 taza',210,'pure|puré'],
-['Batata — 1 mediana',115,'batata'],['Choclo — 1',100,'choclo'],['Zapallo/calabaza — 1 taza',40,'zapallo|calabaza'],
+['Hummus — 2 cdas',70,'hummus'],['Papa hervida/horno — 1 mediana',130,'papa'],
+['Puré de papa — 1 taza',210,'pure|puré'],['Batata — 1 mediana',115,'batata'],
+['Choclo — 1',100,'choclo'],['Zapallo/calabaza — 1 taza',40,'zapallo|calabaza'],
 ['Brócoli — 1 taza',35,'brocoli|brócoli'],['Zanahoria — 1',30,'zanahoria'],['Tomate — 1',25,'tomate'],
 ['Pepino — ½',10,'pepino'],['Zucchini — 1',20,'zucchini|zapallito'],['Cebolla — 1',40,'cebolla'],
 ['Espinaca/acelga cocida — 1 taza',40,'espinaca|acelga'],['Ensalada mixta sin aderezo — 1 plato',60,'ensalada'],
 ['Aceite de oliva — 1 cda',120,'aceite|oliva'],['Palta — ½',120,'palta'],['Mayonesa — 1 cda',90,'mayonesa'],
-['Sopa de verduras — 1 plato',120,'sopa'],['Sopa crema — 1 plato',200,'sopa crema|crema de'],['Locro — 1 plato',480,'locro'],
-['Banana — 1',105,'banana'],['Naranja — 1',65,'naranja'],['Mandarina — 1',45,'mandarina'],['Manzana — 1',95,'manzana'],
-['Pera — 1',100,'pera'],['Kiwi — 1',45,'kiwi'],['Frutillas — 1 taza',50,'frutilla'],['Uvas — 1 taza',60,'uva'],
+['Manteca — 1 cdita (10 g)',72,'manteca'],['Sopa de verduras — 1 plato',120,'sopa'],
+['Sopa crema — 1 plato',200,'sopa crema|crema de'],['Sopa instantánea — 1 sobre',90,'sopa instantanea'],
+['Locro — 1 plato',480,'locro'],
+/* fast food */
+['Hamburguesa fast food simple — 1',400,'hamburguesa simple|burger'],
+['Hamburguesa doble con queso — 1',650,'hamburguesa doble|doble cuarto'],
+['Hamburguesa casera completa — 1',550,'hamburguesa'],
+['Papas fritas — porción mediana',340,'papas fritas medianas'],['Papas fritas — porción grande',500,'papas fritas'],
+['Papas con cheddar y bacon — 1 porción',700,'papas con cheddar'],
+['Nuggets — 6',280,'nuggets'],['Pancho completo — 1',350,'pancho'],['Choripán — 1',450,'choripan|chori'],
+['Lomito completo — 1',650,'lomito'],['Shawarma — 1',550,'shawarma|arabe'],
+['Taco — 1',170,'taco'],['Burrito — 1',600,'burrito'],['Nachos con queso — 1 porción',550,'nachos'],
+['Gyozas — 4',200,'gyoza|empanadita china'],['Arrollado primavera — 1',180,'arrollado primavera'],
+['Picada — porción individual',600,'picada'],['Pochoclos — balde chico',400,'pochoclo|popcorn'],
+/* frutas */
+['Banana — 1',105,'banana'],['Naranja — 1',65,'naranja'],['Mandarina — 1',45,'mandarina'],
+['Manzana — 1',95,'manzana'],['Pera — 1',100,'pera'],['Kiwi — 1',45,'kiwi'],
+['Frutillas — 1 taza',50,'frutilla'],['Uvas — 1 taza',60,'uva'],['Melón — 2 tajadas',70,'melon|melón'],
 ['Ensalada de frutas — 1 bol',120,'ensalada de frutas'],
-['Vino — 1 copa',125,'vino'],['Cerveza — 1 lata',150,'cerveza|birra'],['Fernet con cola — 1 vaso',230,'fernet'],
-['Gaseosa — 1 vaso',100,'gaseosa|coca'],['Jugo exprimido — 1 vaso',110,'jugo'],['Café solo o mate',5,'cafe|café|mate'],
-['Café con leche',80,'cafe con leche'],['Leche — 1 vaso',120,'leche'],['Yogur — 1 pote',120,'yogur'],
-['Queso port salut — 30g',110,'queso'],['Queso rallado — 1 cda',30,'queso rallado'],['Queso untable — 1 cda',50,'untable|casancrem'],
-['Queso de máquina — 1 feta',60,'queso de maquina|feta de queso|fetas de queso'],
-['Manteca — 1 cdita (10 g)',72,'manteca'],['Dulce de leche — 1 cda',60,'dulce de leche'],
-['Salame — 4 fetas finas',130,'salame|fetas de salame'],
+/* bebidas sin alcohol */
+['Agua / soda — 1 vaso',0,'agua|soda'],['Agua saborizada — 1 vaso',45,'saborizada'],
+['Gaseosa — 1 vaso',100,'gaseosa|coca'],['Gaseosa light/zero — 1 vaso',2,'light|zero'],
+['Jugo exprimido — 1 vaso',110,'jugo'],['Limonada — 1 vaso',90,'limonada'],
+['Licuado con agua — 1 vaso',120,'licuado'],['Licuado con leche — 1 vaso',180,'licuado con leche'],
+['Bebida deportiva — 1 botella',150,'gatorade|deportiva'],['Energizante — 1 lata',110,'energizante|speed|red bull'],
+['Café solo o mate',5,'cafe|café|mate'],['Café cortado — 1',30,'cortado'],
+['Café con leche — 1',80,'cafe con leche'],['Capuccino — 1',110,'capuccino|capuchino'],
+['Submarino — 1',220,'submarino'],['Té con azúcar — 1',45,'te con azucar|té'],
+['Leche — 1 vaso',120,'leche'],['Yogur — 1 pote',120,'yogur'],['Yogur bebible — 1 vaso',90,'yogur bebible'],
+/* bar y alcohol */
+['Vino — 1 copa',125,'vino'],['Vino — 2 copas',250,'dos copas'],['Vino dulce/cosecha tardía — 1 copa',160,'vino dulce'],
+['Espumante — 1 copa',90,'espumante|champagne|champán'],['Cerveza — 1 lata',150,'cerveza|birra'],
+['Cerveza — 1 pinta',220,'pinta'],['Fernet con cola — 1 vaso',230,'fernet'],
+['Aperol Spritz — 1',190,'aperol'],['Campari con naranja — 1',180,'campari'],
+['Gin tonic — 1',200,'gin'],['Cuba libre / ron cola — 1',220,'ron|cuba'],
+['Vodka con jugo — 1',180,'vodka'],['Whisky solo — 1 medida',105,'whisky|whiski'],
+['Mojito — 1',210,'mojito'],['Caipirinha — 1',220,'caipirinha|caipiroska'],
+['Daiquiri — 1',230,'daiquiri'],['Licor cremoso (Baileys) — 1 medida',130,'licor|baileys'],
+['Pisco sour — 1',200,'pisco'],
+/* golosinas y dulces */
 ['Chocolate — 2 cuadraditos (20g)',110,'chocolate'],['Chocolate — ½ tableta (50g)',270,'media tableta'],
-['Alfajor — 1',180,'alfajor'],['Helado — 1 bocha',150,'helado'],['Flan/postre — 1',180,'flan|postre'],
-['Azúcar — 1 cda',40,'azucar|azúcar'],['Mermelada — 1 cda',50,'mermelada'],['Miel — 1 cda',60,'miel'],
-['Nueces — 1 puñado',180,'nuez|nueces'],['Almendras — 1 puñado',170,'almendra'],['Maní — 1 puñado',160,'mani|maní'],
-['Barrita de cereal — 1',100,'barrita'],['Snack copetín — 1 puñado',160,'papitas|snack|chizitos']
+['Chocolatín — 1 (8g)',45,'chocolatin|chocolatín'],['Bon o Bon — 1',60,'bon o bon|bombon'],
+['Alfajor simple — 1',180,'alfajor'],['Alfajor triple — 1',250,'alfajor triple'],
+['Vauquita — 1',90,'vauquita'],['Mantecol — porción',130,'mantecol'],
+['Turrón de maní — 1',110,'turron|turrón'],['Caramelos — 2',40,'caramelo'],
+['Gomitas — 1 puñado',140,'gomitas'],['Chupetín — 1',60,'chupetin|chupetín'],
+['Chicle — 1',10,'chicle'],['Rocklets — 1 puñado',190,'rocklets|confites'],
+['Oblea — 1',90,'oblea'],['Garrapiñada — 1 bolsita',210,'garrapiñada|garrapinada'],
+['Galletitas dulces — 3',140,'galletitas'],['Galletitas rellenas (Oreo) — 3',160,'oreo|rellenas'],
+['Galletitas de agua — 5',120,'galletitas de agua|crackers'],
+['Dulce de leche — 1 cda',60,'dulce de leche'],['Mermelada — 1 cda',50,'mermelada'],
+['Miel — 1 cda',60,'miel'],['Azúcar — 1 cda',40,'azucar|azúcar'],
+/* panadería y postres */
+['Medialuna — 1',190,'medialuna|factura'],['Factura con dulce — 1',230,'factura con dulce|vigilante'],
+['Churro relleno — 1',250,'churro'],['Donut — 1',250,'donut|dona'],
+['Muffin — 1',400,'muffin'],['Brownie — 1',300,'brownie'],
+['Pastafrola — 1 porción',280,'pastafrola'],['Bizcochuelo — 1 porción',250,'bizcochuelo'],
+['Torta — 1 porción',400,'torta'],['Chocotorta — 1 porción',450,'chocotorta'],
+['Cheesecake — 1 porción',450,'cheesecake'],['Flan/postre — 1',180,'flan|postre'],
+['Helado — 1 bocha',150,'helado'],['Helado — cucurucho 2 bochas',250,'cucurucho'],
+['Sundae/postre helado — 1',330,'sundae'],
+/* snacks */
+['Nueces — 1 puñado',180,'nuez|nueces'],['Almendras — 1 puñado',170,'almendra'],
+['Maní — 1 puñado',160,'mani|maní'],['Barrita de cereal — 1',100,'barrita'],
+['Papas de copetín — 1 puñado',160,'papitas|snack|chizitos|copetin'],
+['Aceitunas — 10',50,'aceituna'],['Bastones de queso — 4',320,'bastones de queso|mozzarella sticks']
 ];
 
 /* ---------- diario ---------- */
@@ -570,7 +626,6 @@ function renderDiario(){
     : '📅 Última semana: sin registros todavía.';
   renderAgua(); renderSupsDiario(); renderCaca(); renderRegla();
 }
-/* agua */
 function aguaMeta(w){ return Math.ceil(store.perfiles[w].peso*33/250); }
 function renderAgua(){
   const d=dkey(); store.agua[d]=store.agua[d]||{ka:0,lolo:0};
@@ -586,7 +641,6 @@ function setAgua(i){
   store.agua[d][dwho] = (store.agua[d][dwho]===i+1)? i : i+1;
   save(); renderAgua();
 }
-/* baño (solo Ka) */
 function setCaca(v){ store.cacas[dkey()]=v; save(); renderCaca(); }
 function renderCaca(){
   const card=document.getElementById('caca-card');
@@ -611,7 +665,6 @@ function renderCaca(){
   if(racha>=3) msg+=` <span style="color:var(--warn);font-weight:600">${racha} días seguidos ✖ — más agua, fibra y movimiento; si pasa de 4-5, consultá.</span>`;
   document.getElementById('caca-hist').innerHTML=fila+`<p style="margin-top:6px">${msg}</p>`;
 }
-/* menstruación (solo Lolo) */
 function reglaStats(){
   const rs=[...store.reglas].sort();
   if(!rs.length) return null;
