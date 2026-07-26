@@ -315,6 +315,16 @@
       <div><label>Fecha</label><input type="date" id="s-fecha"></div>
       <div><label>Quién</label><select id="s-quien"><option value="ka">Ka</option><option value="lolo">Lolo</option><option value="ambas">Ambas</option></select></div>
       <div><label>Foco</label><select id="s-foco"><option>Fuerza</option><option>Equilibrio</option><option>Estiramiento</option><option>Mixto</option></select></div>
+      <div><label>Día / zona</label><select id="s-dia">
+        <option value="">— sin especificar —</option>
+        <option>Día de piernas</option>
+        <option>Día de brazos</option>
+        <option>Día de espalda/torso</option>
+        <option>Día de core/equilibrio</option>
+        <option>Día completo (full body)</option>
+        <option>Día de estiramiento/movilidad</option>
+        <option>Cardio</option>
+      </select></div>
       <div><label>Esfuerzo percibido (1-10)</label><input type="number" id="s-rpe" min="1" max="10"></div>
     </div>
     <label style="margin-top:8px">Ejercicios y pesos (ej: sentadilla 3x10 con 8kg)</label>
@@ -323,7 +333,7 @@
   </div>
   <div class="card">
     <h2>📈 Historial de sesiones</h2>
-    <table><thead><tr><th>Fecha</th><th>Quién</th><th>Foco</th><th>RPE</th><th>Notas</th><th></th></tr></thead><tbody id="s-list"></tbody></table>
+    <table><thead><tr><th>Fecha</th><th>Quién</th><th>Foco</th><th>Día/zona</th><th>RPE</th><th>Notas</th><th></th></tr></thead><tbody id="s-list"></tbody></table>
     <p class="muted" id="s-count" style="margin-top:8px"></p>
   </div>
   <div class="card">
@@ -444,11 +454,37 @@ const FOODS=[
 ['Huevo — 1',75,'huevo'],['Huevos revueltos — 2 con oliva',195,'revuelto|huevos revueltos'],
 ['Tortilla de verduras — 1 porción',180,'tortilla'],['Tortilla de papa — 1 porción',320,'tortilla de papa'],
 ['Atún al agua — 1 lata',110,'atun|atún'],['Atún en aceite escurrido — 1 lata',180,'atun en aceite'],
-['Merluza — 1 filet',150,'merluza|pescado'],['Salmón — porción 150g',310,'salmon|salmón'],
+['Merluza al horno/plancha — 1 filet',150,'merluza'],['Merluza frita — 1 filet',280,'merluza frita'],
+['Salmón a la plancha — 150g',310,'salmon|salmón'],['Salmón ahumado — 50g',90,'salmon ahumado|salmón ahumado'],
 ['Ceviche — 1 plato',220,'ceviche'],['Rabas — 1 porción',480,'rabas|calamares'],
+['Trucha a la plancha — 1 filet',220,'trucha'],['Atún fresco a la plancha — 150g',230,'atun fresco|atún fresco'],
+['Pescado a la parrilla — 1 porción',250,'pescado a la parrilla|pescado a la grilla'],
+['Pescado rebozado/milanesa de pescado — 1',380,'pescado rebozado|milanesa de pescado'],
+['Bacalao — 1 porción',200,'bacalao'],['Pulpo a la parrilla/gallega — 1 porción',260,'pulpo'],
+['Camarones/langostinos salteados — 1 porción',220,'camarones|langostinos'],
+['Paella de mariscos — 1 plato',520,'paella'],['Cazuela de pescado — 1 plato',300,'cazuela de pescado'],
+['Empanada de pescado/atún — 1',300,'empanada de pescado|empanada de atun'],
 ['Sushi — 1 pieza',45,'sushi pieza'],['Sushi — 10 piezas',450,'sushi'],['Pokebowl completo — 1',550,'poke'],
-['Bife de carne magra — 150g',330,'bife|carne|churrasco'],['Asado — 1 porción',500,'asado|costilla'],
-['Matambre a la pizza — 1 porción',450,'matambre'],['Bondiola — 1 porción',480,'bondiola'],
+['Bife de carne magra — 150g',330,'bife|carne|churrasco'],['Asado de tira — 1 porción',500,'asado'],
+['Matambre a la pizza — 1 porción',450,'matambre'],['Bondiola de cerdo al horno — 1 porción',480,'bondiola'],
+['Pechito de cerdo (costillar) al horno — 1 porción',520,'pechito|costillar de cerdo'],
+['Costillas de cerdo BBQ — 1 porción',540,'costillas de cerdo|costillas bbq'],
+['Costillas de res — 1 porción',500,'costillas de res|costilla de vaca'],
+['Chuleta de cerdo a la plancha — 1 (200g)',350,'chuleta'],
+['Cerdo agridulce con arroz — 1 plato',550,'cerdo agridulce'],
+['Pernil al horno — 1 porción',480,'pernil'],
+['Carré de cerdo al horno — 1 porción',420,'carre de cerdo|carré de cerdo'],
+['Panceta — 3 fetas',270,'panceta|bacon'],
+['Ají de gallina — 1 plato',480,'aji de gallina|ají de gallina'],
+['Arroz con pollo — 1 plato',480,'arroz con pollo'],
+['Risotto de champiñones — 1 plato',480,'risotto de champiñones|risoto'],
+['Risotto de zapallo — 1 plato',450,'risotto de zapallo'],
+['Risotto de mariscos — 1 plato',500,'risotto de mariscos'],
+['Risotto simple (parmesano) — 1 plato',470,'risotto'],
+['Quinotto (risotto de quinoa) — 1 plato',400,'quinotto|quinotto de quinoa'],
+['Ramen — 1 plato',550,'ramen'],['Teriyaki de pollo con arroz — 1 plato',480,'teriyaki'],
+['Tempura — 6 piezas',380,'tempura'],['Yakisoba — 1 plato',420,'yakisoba'],
+['Onigiri — 1',110,'onigiri'],['Okonomiyaki — 1 porción',350,'okonomiyaki'],
 ['Milanesa frita — 1',420,'milanesa frita'],['Milanesa al horno — 1',300,'milanesa'],
 ['Milanesa napolitana — 1',520,'napolitana'],['Sándwich de milanesa — 1',700,'sandwich de milanesa|milanga'],
 ['Pollo pechuga plancha — 150g',250,'pollo|pechuga'],['Pata muslo sin piel horno — 1',290,'pata muslo'],
@@ -519,7 +555,7 @@ const FOODS=[
 ['Vino — 1 copa',125,'vino'],['Vino — 2 copas',250,'dos copas'],['Vino dulce/cosecha tardía — 1 copa',160,'vino dulce'],
 ['Espumante — 1 copa',90,'espumante|champagne|champán'],['Cerveza — 1 lata',150,'cerveza|birra'],
 ['Cerveza — 1 pinta',220,'pinta'],['Fernet con cola — 1 vaso',230,'fernet'],
-['Aperol Spritz — 1',190,'aperol'],['Vermut con soda — 1 vaso',140,'vermut|vermú'],['Campari con naranja — 1',180,'campari'],
+['Aperol Spritz — 1',190,'aperol'],['Vermut con soda — 1 vaso',140,'vermut|vermú'],['Vermut con pomelo — 1 vaso',160,'vermut con pomelo'],['Campari con naranja — 1',180,'campari'],
 ['Gin tonic — 1',200,'gin'],['Cuba libre / ron cola — 1',220,'ron|cuba'],
 ['Vodka con jugo — 1',180,'vodka'],['Whisky solo — 1 medida',105,'whisky|whiski'],
 ['Mojito — 1',210,'mojito'],['Caipirinha — 1',220,'caipirinha|caipiroska'],
@@ -530,12 +566,13 @@ const FOODS=[
 ['Chocolatín — 1 (8g)',45,'chocolatin|chocolatín'],['Bon o Bon — 1',60,'bon o bon|bombon'],
 ['Alfajor simple — 1',180,'alfajor'],['Alfajor triple — 1',250,'alfajor triple'],
 ['Vauquita — 1',90,'vauquita'],['Mantecol — porción',130,'mantecol'],
-['Turrón de maní — 1',110,'turron|turrón'],['Caramelos — 2',40,'caramelo'],
+['Turrón de maní — 1',110,'turron|turrón'],['Toffees — 3',110,'toffee|toffees'],['Caramelos — 2',40,'caramelo'],
 ['Gomitas — 1 puñado',140,'gomitas'],['Chupetín — 1',60,'chupetin|chupetín'],
 ['Chicle — 1',10,'chicle'],['Rocklets — 1 puñado',190,'rocklets|confites'],
 ['Oblea — 1',90,'oblea'],['Garrapiñada — 1 bolsita',210,'garrapiñada|garrapinada'],
 ['Galletitas dulces — 3',140,'galletitas'],['Galletitas rellenas (Oreo) — 3',160,'oreo|rellenas'],
 ['Galletitas de agua — 5',120,'galletitas de agua|crackers'],
+['Galletas de arroz — 3',90,'galletas de arroz|tortitas de arroz'],
 ['Dulce de leche — 1 cda',60,'dulce de leche'],['Mermelada — 1 cda',50,'mermelada'],
 ['Miel — 1 cda',60,'miel'],['Azúcar — 1 cda',40,'azucar|azúcar'],
 /* panadería y postres */
@@ -549,7 +586,12 @@ const FOODS=[
 ['Sundae/postre helado — 1',330,'sundae'],
 /* snacks */
 ['Nueces — 1 puñado',180,'nuez|nueces'],['Almendras — 1 puñado',170,'almendra'],
-['Maní — 1 puñado',160,'mani|maní'],['Barrita de cereal — 1',100,'barrita'],
+['Maní — 1 puñado',160,'mani|maní'],['Semillas de chía — 1 cda',60,'chia|chía'],
+['Semillas de lino — 1 cda',55,'lino|linaza'],['Semillas de girasol — 1 puñado',165,'girasol'],
+['Semillas de zapallo/calabaza — 1 puñado',150,'semillas de zapallo|semillas de calabaza|pepitas'],
+['Semillas de sésamo — 1 cda',50,'sesamo|sésamo|ajonjolí'],
+['Mix de semillas — 1 cda',55,'mix de semillas'],
+['Barrita de cereal — 1',100,'barrita'],
 ['Papas de copetín — 1 puñado',160,'papitas|snack|chizitos|copetin'],
 ['Aceitunas — 10',50,'aceituna'],['Bastones de queso — 4',320,'bastones de queso|mozzarella sticks']
 ];
@@ -1063,6 +1105,7 @@ document.querySelectorAll('#cats .pill').forEach(p=>{
 function addSesion(){
   const s={fecha:document.getElementById('s-fecha').value||today(),
     quien:document.getElementById('s-quien').value, foco:document.getElementById('s-foco').value,
+    dia:document.getElementById('s-dia').value,
     rpe:document.getElementById('s-rpe').value, notas:document.getElementById('s-notas').value};
   store.sesiones.unshift(s); save(); renderSesiones();
   document.getElementById('s-notas').value='';
@@ -1070,7 +1113,7 @@ function addSesion(){
 function delSesion(i){ store.sesiones.splice(i,1); save(); renderSesiones(); }
 function renderSesiones(){
   document.getElementById('s-list').innerHTML=store.sesiones.map((s,i)=>
-    `<tr><td>${s.fecha}</td><td>${s.quien}</td><td>${s.foco}</td><td>${s.rpe||'—'}</td><td>${s.notas||''}</td><td><button class="del" onclick="delSesion(${i})">✕</button></td></tr>`).join('');
+    `<tr><td>${s.fecha}</td><td>${s.quien}</td><td>${s.foco}</td><td>${s.dia||'—'}</td><td>${s.rpe||'—'}</td><td>${s.notas||''}</td><td><button class="del" onclick="delSesion(${i})">✕</button></td></tr>`).join('');
   const mes = store.sesiones.filter(s=>s.fecha && s.fecha.slice(0,7)===today().slice(0,7)).length;
   document.getElementById('s-count').textContent=`Sesiones este mes: ${mes} · Meta: 12-13 (3x semana)`;
 }
